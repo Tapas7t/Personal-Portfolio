@@ -134,9 +134,6 @@ export const CertificatesSection: React.FC = () => {
         }}
         className="mb-12 sm:mb-16 text-center relative z-10"
       >
-        <div className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)] mb-2.5">
-          CERTIFICATIONS
-        </div>
         <h2 className="font-serif-accent italic text-3xl sm:text-4xl md:text-5xl font-normal tracking-[-0.03em] inline-block select-none leading-[1.1]">
           <span className="bg-gradient-to-b from-sky-50 via-sky-200 to-sky-300 bg-clip-text text-transparent">
             Certi

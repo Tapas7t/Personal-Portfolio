@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useSpring, useMotionValue } from 'motion/react';
 import { ArrowRight, Menu, X } from 'lucide-react';
-import { scrollToTarget, stopScroll, startScroll } from '../utils/smoothScroll';
+import { scrollToSection, stopScroll, startScroll, getIsNavScrolling, subscribeNavScroll, NAV_OFFSET } from '../utils/smoothScroll';
 
 interface NavbarProps {
   onOpenContact: () => void;
@@ -155,13 +155,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
     };
   }, [scrolled]);
 
+  // Synchronize active section with programmatic navigation scrolls
+  useEffect(() => {
+    return subscribeNavScroll((targetId, status) => {
+      if (status === 'start' && targetId) {
+        setActiveSection(targetId);
+      }
+    });
+  }, []);
+
   // Viewport-relative Single Scroll-Spy (30-40% viewport line)
   useEffect(() => {
     let ticking = false;
 
     const handleScroll = () => {
+      // While isNavScrolling is true or data-nav-scroll is set, the scroll-spy must IGNORE updates
+      if (getIsNavScrolling() || (typeof document !== 'undefined' && Boolean(document.documentElement.dataset.navScroll))) return;
+
       if (!ticking) {
         window.requestAnimationFrame(() => {
+          if (getIsNavScrolling() || (typeof document !== 'undefined' && Boolean(document.documentElement.dataset.navScroll))) {
+            ticking = false;
+            return;
+          }
+
           const scrollY = window.scrollY;
           setScrolled(scrollY > 25);
 
@@ -182,8 +199,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             return;
           }
 
-          // Active line is roughly 35% from the top of viewport (below floating navbar)
-          const viewportThreshold = window.innerHeight * 0.35;
+          // Active line aligns with NAV_OFFSET (+12px tolerance) so arriving at a section never highlights the previous section
+          const activeLine = NAV_OFFSET + 12;
           let current = '';
 
           // Check if at the very bottom of page
@@ -193,27 +210,27 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
           if (isAtBottom) {
             current = 'resume';
           } else {
-            // Find section that encompasses the 35% threshold line
+            // Find section that encompasses the active line
             for (const id of sectionIds) {
               const el = document.getElementById(id);
               if (el) {
                 const rect = el.getBoundingClientRect();
-                if (rect.top <= viewportThreshold && rect.bottom > viewportThreshold) {
+                if (rect.top <= activeLine && rect.bottom > activeLine) {
                   current = id;
                   break;
                 }
               }
             }
 
-            // Fallback: closest section whose top is nearest below/at navbar
+            // Fallback: closest section whose top is nearest below/at activeLine
             if (!current) {
               let minDistance = Infinity;
               for (const id of sectionIds) {
                 const el = document.getElementById(id);
                 if (el) {
                   const rect = el.getBoundingClientRect();
-                  const distance = Math.abs(rect.top - viewportThreshold);
-                  if (rect.top <= viewportThreshold && distance < minDistance) {
+                  const distance = Math.abs(rect.top - activeLine);
+                  if (rect.top <= activeLine && distance < minDistance) {
                     minDistance = distance;
                     current = id;
                   }
@@ -257,14 +274,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
     { label: 'Resume', href: '#resume', id: 'resume' },
   ];
 
-  // Smooth scroll with offset for floating navbar height
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  // Unified click handler with immediate state activation and smooth scroll
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
-    scrollToTarget('#' + targetId, { offset: -85, duration: 0.9 });
     setActiveSection(targetId);
-    if (window.location.hash !== `#${targetId}`) {
-      window.history.replaceState(null, '', `#${targetId}`);
-    }
+    scrollToSection(targetId);
   };
 
   const rectW = pillDimensions.width > 2 ? pillDimensions.width - 2 : 'calc(100% - 2px)';
@@ -388,9 +402,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             href="#hero"
             onClick={(e) => {
               e.preventDefault();
-              scrollToTarget(0, { offset: 0, duration: 0.9 });
               setActiveSection('');
-              window.history.replaceState(null, '', window.location.pathname + window.location.search);
+              scrollToSection('hero');
             }}
             style={{ transform: 'translateZ(12px)' }}
             className="flex items-center text-xl sm:text-2xl md:text-[26px] font-black tracking-wider transition-transform hover:scale-105 duration-200 whitespace-nowrap shrink-0 min-h-[44px] select-none group relative z-10 will-change-transform"
@@ -441,7 +454,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                 href={link.href}
                 label={link.label}
                 isActive={activeSection === link.id}
-                onClick={(e) => scrollToSection(e, link.id)}
+                onClick={(e) => handleNavClick(e, link.id)}
               />
             ))}
           </nav>
@@ -452,7 +465,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             className="hidden md:flex items-center gap-3 shrink-0 relative z-10 will-change-transform"
           >
             <motion.button
-              onClick={onOpenContact}
+              onClick={() => {
+                setActiveSection('resume');
+                scrollToSection('resume');
+                onOpenContact();
+              }}
               whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.18 }}
@@ -500,8 +517,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                   key={link.label}
                   href={link.href}
                   onClick={(e) => {
-                    scrollToSection(e, link.id);
+                    e.preventDefault();
                     setMobileMenuOpen(false);
+                    setActiveSection(link.id);
+                    scrollToSection(link.id);
                   }}
                   className={`min-h-[44px] px-3.5 py-2.5 text-[0.75rem] font-sans uppercase tracking-[0.12em] flex items-center rounded-xl transition-colors ${
                     activeSection === link.id
@@ -519,6 +538,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   setMobileMenuOpen(false);
+                  setActiveSection('resume');
+                  scrollToSection('resume');
                   onOpenContact();
                 }}
                 className="w-full min-h-[44px] py-2.5 px-4 text-[0.75rem] font-sans font-semibold uppercase tracking-[0.12em] text-[var(--gold)] bg-[var(--gold)]/10 hover:bg-[var(--gold)]/20 border border-[var(--gold)]/80 rounded-full transition-colors text-center flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(245,168,0,0.18)]"

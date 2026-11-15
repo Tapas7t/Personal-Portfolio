@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import { HeroTerrain } from './HeroTerrain';
 import { HeroFloatingElements } from './HeroFloatingElements';
+import { scrollToSection } from '../utils/smoothScroll';
 
 interface HeroProps {
   onOpenContact?: () => void;
@@ -99,44 +100,20 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         />
       </motion.div>
 
-      {/* Layer 3: Dark gradient overlay ensuring optimal contrast for hero text & buttons */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/92 via-[#030712]/55 to-transparent pointer-events-none z-[2]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-[#030712]/40 pointer-events-none z-[2]" />
+      {/* Layer 3: Dark gradient overlay ensuring optimal contrast for hero text & buttons, smoothly fading to transparent at bottom to blend with subsequent sections */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/92 via-[#030712]/55 to-transparent pointer-events-none z-[2] [mask-image:linear-gradient(to_bottom,black_50%,transparent_95%)] [-webkit-mask-image:linear-gradient(to_bottom,black_50%,transparent_95%)]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/0 via-transparent to-[#030712]/40 pointer-events-none z-[2] [mask-image:linear-gradient(to_bottom,black_50%,transparent_95%)] [-webkit-mask-image:linear-gradient(to_bottom,black_50%,transparent_95%)]" />
 
       {/* Layer 3B: Floating Gold Objects & Fine Gold Dust */}
       {!isClone && <HeroFloatingElements heroRef={heroRef} />}
 
-      {/* Layer 4: Top Editorial Status with gentle initial fade-in */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-wrap items-center text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[rgba(245,245,245,0.55)] pt-2 z-10 break-words"
-      >
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[var(--gold)] shrink-0" />
-          <span>STATUS · AVAILABLE FOR ROLES · MUMBAI, INDIA</span>
-        </div>
-      </motion.div>
-
       {/* Layer 4: Main Typography & Statement with Clean, Staggered Entrance & 3D Title Tilt */}
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="my-auto py-4 sm:py-6 md:py-8 select-none relative z-10 max-w-5xl"
+        className="my-auto py-6 sm:py-10 md:py-12 select-none relative z-10 max-w-5xl"
       >
         <div className="space-y-5 sm:space-y-6">
           <div className="space-y-2.5 sm:space-y-3">
-            {/* Professional Category Label */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)]"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
-              <span>FULL-STACK DEVELOPER · AI ENTHUSIAST</span>
-            </motion.div>
-
             {/* Clean Staggered Headings Hierarchy with 3D Perspective Tilt */}
             <motion.div
               style={{
@@ -194,6 +171,10 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
           >
             <motion.a
               href="#works"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('works');
+              }}
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
@@ -205,26 +186,13 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         </div>
       </motion.div>
 
-      {/* Layer 4: Hero Footnotes / Technologies */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.58, ease: [0.16, 1, 0.3, 1] }}
-        className="pt-8 border-t border-slate-800/80 text-[0.75rem] text-[var(--muted)] z-10"
-      >
-        <div className="space-y-1">
-          <div className="text-[rgba(245,245,245,0.55)] uppercase tracking-[0.12em] font-medium">
-            ENGINEERING & WEB TECHNOLOGIES
-          </div>
-          <div className="text-[var(--text)] text-[0.9375rem] break-words">
-            HTML · CSS · JavaScript · React · Node.js · Express.js · MongoDB · Git · GitHub
-          </div>
-        </div>
-      </motion.div>
-
       {/* Layer 4: Editorial Scroll Prompt Indicator */}
       <motion.a
         href="#works"
+        onClick={(e) => {
+          e.preventDefault();
+          scrollToSection('works');
+        }}
         aria-label="Scroll to Works"
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}

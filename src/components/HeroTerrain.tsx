@@ -128,6 +128,12 @@ export const HeroTerrain: React.FC<HeroTerrainProps> = ({ heroRef }) => {
     window.addEventListener('resize', resizeCanvas);
 
     const render = (now: number) => {
+      // Pause 3D terrain canvas rendering during programmatic nav scrolling
+      if (typeof document !== 'undefined' && document.documentElement.dataset.navScroll === '1') {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       const parent = canvas.parentElement;
       if (!parent) return;
       const width = parent.clientWidth;
@@ -265,7 +271,7 @@ export const HeroTerrain: React.FC<HeroTerrainProps> = ({ heroRef }) => {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0 [mask-image:linear-gradient(to_right,black_0%,black_35%,rgba(0,0,0,0.5)_58%,transparent_76%)] [-webkit-mask-image:linear-gradient(to_right,black_0%,black_35%,rgba(0,0,0,0.5)_58%,transparent_76%)]"
+      className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0 [mask-image:linear-gradient(to_right,black_0%,black_35%,rgba(0,0,0,0.5)_58%,transparent_76%),linear-gradient(to_bottom,black_60%,transparent_95%)] [-webkit-mask-image:linear-gradient(to_right,black_0%,black_35%,rgba(0,0,0,0.5)_58%,transparent_76%),linear-gradient(to_bottom,black_60%,transparent_95%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]"
       aria-hidden="true"
     >
       <canvas

@@ -8,7 +8,7 @@ import { TechTile } from './TechTile';
 interface ToolGroup {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   icon: React.ComponentType<{ className?: string }>;
   items: string[];
   accentColor: string;
@@ -18,7 +18,6 @@ const TOOL_GROUPS: ToolGroup[] = [
   {
     id: 'frontend',
     title: 'Frontend',
-    description: 'Modern, component-driven user interfaces and responsive web applications.',
     icon: Code2,
     items: [
       'React.js',
@@ -34,7 +33,6 @@ const TOOL_GROUPS: ToolGroup[] = [
   {
     id: 'backend',
     title: 'Backend, Database & Auth',
-    description: 'Server architectures, RESTful API design, MongoDB data persistence, and secure session authentication.',
     icon: Server,
     items: [
       'Node.js',
@@ -48,7 +46,6 @@ const TOOL_GROUPS: ToolGroup[] = [
   {
     id: 'tools',
     title: 'Tools',
-    description: 'Engineering workflows, developer environments, and version control tooling.',
     icon: Wrench,
     items: ['Git', 'GitHub', 'VS Code'],
     accentColor: '#38BDF8',
@@ -233,9 +230,9 @@ const SkillCard: React.FC<{
       variants={variants}
       onAnimationComplete={handleAnimationComplete}
       style={isCleanedUp ? { transform: 'none', willChange: 'auto' } : undefined}
-      className={`flex relative ${zClass}`}
+      className={`flex relative h-full ${zClass}`}
     >
-      <GlassCard className="p-6 md:p-8 flex flex-col justify-between w-full cursor-pointer select-none">
+      <GlassCard className="p-6 md:p-8 flex flex-col w-full h-full cursor-pointer select-none">
         {/* Card Content */}
         <div>
           <div className="mb-4">
@@ -250,16 +247,17 @@ const SkillCard: React.FC<{
           <h3 data-depth="1" className="text-xl font-medium text-[var(--text)] tracking-[-0.02em]">
             {group.title}
           </h3>
-          <p className="mt-2 text-sm text-[rgba(245,245,245,0.7)] font-normal leading-relaxed">
-            {group.description}
-          </p>
         </div>
 
         {/* Technologies Tiles with Real Logos */}
-        <div data-depth="1" className="mt-6 pt-5 border-t border-slate-800/80">
-          <div className="flex flex-wrap gap-2">
+        <div data-depth="1" className="mt-6 pt-5 border-t border-slate-800/80 flex-1 flex flex-col justify-start">
+          <div className={group.id === 'tools' ? 'grid grid-cols-1 gap-2.5' : 'flex flex-wrap gap-2'}>
             {group.items.map((tech) => (
-              <TechTile key={tech} name={tech} />
+              <TechTile
+                key={tech}
+                name={tech}
+                className={group.id === 'tools' ? 'w-full py-2.5 px-4' : ''}
+              />
             ))}
           </div>
         </div>

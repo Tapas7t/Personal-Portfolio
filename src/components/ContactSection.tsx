@@ -2,10 +2,11 @@ import React, { useRef } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Mail, MapPin, Github, Linkedin, ArrowUpRight, Download, ArrowUp } from 'lucide-react';
 import GlassCard from './GlassCard';
-import { scrollToTarget } from '../utils/smoothScroll';
+import { scrollToSection } from '../utils/smoothScroll';
 
 export const ContactSection: React.FC = () => {
   const emailAddress = 'contactattapas@gmail.com';
+  const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}`;
   const currentYear = new Date().getFullYear();
 
   const headerRef = useRef<HTMLDivElement>(null);
@@ -13,18 +14,28 @@ export const ContactSection: React.FC = () => {
   const locationTileRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  const scrollToTop = () => {
-    scrollToTarget(0, { offset: 0, duration: 0.9 });
-    if (window.location.hash) {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  const handleEmailClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch) {
+      e.preventDefault();
+      window.location.href = `mailto:${emailAddress}`;
+    } else {
+      e.preventDefault();
+      window.open(gmailComposeUrl, '_blank', 'noopener,noreferrer');
     }
+  };
+
+  const scrollToTop = () => {
+    scrollToSection('hero');
   };
 
   return (
     <section
-      id="connect"
+      id="resume"
       className="py-[var(--section-spacing-y)] px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 w-full max-w-[1720px] mx-auto border-t border-slate-900/80 scroll-mt-24"
     >
+      {/* Anchor alias so #connect also maps directly to this Contact block */}
+      <div id="connect" className="sr-only" aria-hidden="true" />
       <div className="w-full">
         {/* Header with gentle scroll reveal */}
         <motion.div
@@ -52,7 +63,7 @@ export const ContactSection: React.FC = () => {
             Let's Build Something <span className="bg-gradient-to-r from-sky-400 via-[#38BDF8] to-blue-500 bg-clip-text text-transparent">Together</span>
           </h2>
           <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-[rgba(245,245,245,0.7)] font-normal">
-            Have an interesting idea, a project opportunity, or want to connect? I'm always open to conversations with developers, technology enthusiasts, and people building meaningful products.
+            Have an interesting idea or a project opportunity? I'm always open to a conversation.
           </p>
         </motion.div>
 
@@ -88,25 +99,24 @@ export const ContactSection: React.FC = () => {
 
                   <div>
                     <a
-                      href={`mailto:${emailAddress}`}
-                      data-depth="1"
-                      className="group inline-flex items-center gap-2 text-base sm:text-lg md:text-xl font-medium text-[var(--gold)] hover:text-[var(--gold-soft)] transition-colors whitespace-nowrap min-h-[44px] py-1 select-text"
+                      href={gmailComposeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={handleEmailClick}
+                      className="group inline-flex items-center gap-2 text-base sm:text-lg md:text-xl font-medium text-[var(--gold)] hover:text-[var(--gold-soft)] transition-colors whitespace-nowrap min-h-[44px] py-1 select-text relative z-10 cursor-pointer"
                       title="Send email to Tapas Karmakar"
                     >
                       <span>{emailAddress}</span>
                       <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 duration-200 shrink-0" />
                     </a>
-                    <p className="text-xs text-[rgba(245,245,245,0.55)] mt-1">
-                      Click to compose in your preferred email client
-                    </p>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-800/80 mt-6" id="resume">
+                <div className="pt-6 border-t border-slate-800/80 mt-6">
                   <a
                     href="/Tapas_Karmakar_Resume.pdf"
                     download="Tapas_Karmakar_Resume.pdf"
-                    className="min-h-[44px] px-6 py-2.5 rounded-xl bg-[var(--gold)] hover:bg-[var(--gold-soft)] text-slate-950 text-[0.75rem] uppercase tracking-[0.12em] font-medium transition-all inline-flex items-center justify-center gap-2 shadow-sm shrink-0 w-full sm:w-auto group"
+                    className="min-h-[44px] px-6 py-2.5 rounded-xl bg-[var(--gold)] hover:bg-[var(--gold-soft)] text-slate-950 text-[0.75rem] uppercase tracking-[0.12em] font-medium transition-all inline-flex items-center justify-center gap-2 shadow-sm shrink-0 w-full sm:w-auto group relative z-10 cursor-pointer"
                   >
                     <Download className="w-4 h-4 text-slate-950 transition-transform group-hover:translate-y-0.5 duration-200 shrink-0" />
                     <span>Download Resume</span>
@@ -161,7 +171,7 @@ export const ContactSection: React.FC = () => {
                       href="https://github.com/Tapas7t"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group min-h-[44px] px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--text)] hover:text-[var(--gold)] transition-all inline-flex items-center gap-2"
+                      className="group min-h-[44px] px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--text)] hover:text-[var(--gold)] transition-all inline-flex items-center gap-2 relative z-10 cursor-pointer"
                       title="GitHub Profile"
                     >
                       <Github className="w-4 h-4 text-slate-300 group-hover:text-[var(--gold)] transition-colors shrink-0" />
@@ -173,7 +183,7 @@ export const ContactSection: React.FC = () => {
                       href="https://www.linkedin.com/in/tapas-karmakar-276a37438"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group min-h-[44px] px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--text)] hover:text-[var(--gold)] transition-all inline-flex items-center gap-2"
+                      className="group min-h-[44px] px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--text)] hover:text-[var(--gold)] transition-all inline-flex items-center gap-2 relative z-10 cursor-pointer"
                       title="LinkedIn Profile"
                     >
                       <Linkedin className="w-4 h-4 text-slate-300 group-hover:text-[var(--gold)] transition-colors shrink-0" />

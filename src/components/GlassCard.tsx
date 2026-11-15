@@ -1,5 +1,52 @@
 import { useRef, useEffect, type ReactNode, type PointerEvent } from "react";
 
+// Helper to separate outer layout/sizing/grid classes from inner card padding/content-flow classes
+function splitCardClasses(className: string) {
+  const outer: string[] = [];
+  const inner: string[] = [];
+
+  const tokens = className.trim().split(/\s+/).filter(Boolean);
+
+  for (const token of tokens) {
+    // Content layout & padding classes that belong inside the visual card
+    const isInner =
+      token.startsWith("p-") ||
+      token.includes(":p-") ||
+      token.startsWith("px-") ||
+      token.includes(":px-") ||
+      token.startsWith("py-") ||
+      token.includes(":py-") ||
+      token.startsWith("pt-") ||
+      token.startsWith("pb-") ||
+      token.startsWith("pl-") ||
+      token.startsWith("pr-") ||
+      token.startsWith("space-") ||
+      token.startsWith("gap-") ||
+      token === "flex" ||
+      token === "flex-col" ||
+      token === "flex-row" ||
+      token.startsWith("justify-") ||
+      token.startsWith("items-") ||
+      token === "overflow-hidden";
+
+    if (isInner) {
+      inner.push(token);
+    } else {
+      outer.push(token);
+    }
+
+    // Interactive classes relevant to both layers
+    if (token === "cursor-pointer" || token === "select-none") {
+      if (!inner.includes(token)) inner.push(token);
+    }
+  }
+
+  return {
+    outerClass: outer.join(" "),
+    innerClass: inner.join(" "),
+  };
+}
+
 export default function GlassCard({
   children,
   className = "",
@@ -9,20 +56,23 @@ export default function GlassCard({
   className?: string;
   tilt?: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const outerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
+
+  const { outerClass, innerClass } = splitCardClasses(className);
 
   const reset = () => {
     if (rafId.current !== null) {
       cancelAnimationFrame(rafId.current);
       rafId.current = null;
     }
-    const el = ref.current;
-    if (!el) return;
-    el.style.setProperty("--rx", "0deg");
-    el.style.setProperty("--ry", "0deg");
-    el.style.removeProperty("--mx");
-    el.style.removeProperty("--my");
+    const innerEl = innerRef.current;
+    if (!innerEl) return;
+    innerEl.style.setProperty("--rx", "0deg");
+    innerEl.style.setProperty("--ry", "0deg");
+    innerEl.style.removeProperty("--mx");
+    innerEl.style.removeProperty("--my");
   };
 
   useEffect(() => {
@@ -48,8 +98,9 @@ export default function GlassCard({
       return;
     }
 
-    const el = ref.current;
-    if (!el) return;
+    const outerEl = outerRef.current;
+    const innerEl = innerRef.current;
+    if (!outerEl || !innerEl) return;
 
     const clientX = e.clientX;
     const clientY = e.clientY;
@@ -59,20 +110,23 @@ export default function GlassCard({
     }
 
     rafId.current = requestAnimationFrame(() => {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
+      if (!outerEl || !innerEl) return;
+      // Compute pointer position from OUTER element's getBoundingClientRect() (stable, never transforms)
+      const r = outerEl.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) return;
 
+      // Clamp px and py to 0..1
       const px = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
       const py = Math.max(0, Math.min(1, (clientY - r.top) / r.height));
 
       const rx = (0.5 - py) * tilt * 2;
       const ry = (px - 0.5) * tilt * 2;
 
-      el.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
-      el.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
-      el.style.setProperty("--mx", `${clientX - r.left}px`);
-      el.style.setProperty("--my", `${clientY - r.top}px`);
+      // Set --mx, --my, --rx and --ry on the INNER element
+      innerEl.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+      innerEl.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+      innerEl.style.setProperty("--mx", `${(clientX - r.left).toFixed(1)}px`);
+      innerEl.style.setProperty("--my", `${(clientY - r.top).toFixed(1)}px`);
       rafId.current = null;
     });
   };
@@ -83,13 +137,20 @@ export default function GlassCard({
 
   return (
     <div
-      ref={ref}
+      ref={outerRef}
+      onPointerEnter={onMove}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       onPointerCancel={onLeave}
-      className={`glass-card ${className}`}
+      className={`glass-card-hit ${outerClass}`}
     >
-      {children}
+      <div
+        ref={innerRef}
+        className={`glass-card ${innerClass}`}
+        style={{ height: "100%" }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

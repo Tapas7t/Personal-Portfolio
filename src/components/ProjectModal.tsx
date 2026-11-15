@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { X, CheckCircle2, Server, Code, Github, ArrowUpRight } from 'lucide-react';
 import { ProjectItem, medconsultsConfig } from '../utils/portfolio-logic';
+import { startScroll, stopScroll } from '../utils/smoothScroll';
 
 interface ProjectModalProps {
   project: ProjectItem | null;
@@ -9,6 +10,21 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+  // Prevent background scrolling while modal is open, and ensure Lenis starts on close
+  useEffect(() => {
+    if (project) {
+      stopScroll();
+      document.body.style.overflow = 'hidden';
+    } else {
+      startScroll();
+      document.body.style.overflow = '';
+    }
+    return () => {
+      startScroll();
+      document.body.style.overflow = '';
+    };
+  }, [project]);
+
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

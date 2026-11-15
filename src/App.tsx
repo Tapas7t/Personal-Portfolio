@@ -10,7 +10,7 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { ProjectModal } from './components/ProjectModal';
 import { ProjectItem } from './utils/portfolio-logic';
-import { initSmoothScroll, scrollToTarget } from './utils/smoothScroll';
+import { initSmoothScroll, scrollToSection } from './utils/smoothScroll';
 
 export default function App() {
   const [activeProjectModal, setActiveProjectModal] = useState<ProjectItem | null>(null);
@@ -20,10 +20,7 @@ export default function App() {
   }, []);
 
   const handleOpenContact = () => {
-    scrollToTarget('#connect', { offset: -85, duration: 0.9 });
-    if (window.location.hash !== '#connect') {
-      window.history.replaceState(null, '', '#connect');
-    }
+    scrollToSection('resume');
   };
 
   return (

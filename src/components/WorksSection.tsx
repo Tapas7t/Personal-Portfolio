@@ -24,7 +24,7 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
   const isDevelopment = Boolean(medconsultsConfig.status && medconsultsConfig.status.trim());
 
   return (
-    <section id={isClone ? undefined : 'works'} className="py-[var(--section-spacing-y)] px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 w-full max-w-[1720px] mx-auto border-t border-slate-900/80 scroll-mt-24">
+    <section id={isClone ? undefined : 'works'} className="py-[var(--section-spacing-y)] px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 w-full max-w-[1720px] mx-auto scroll-mt-24">
       {/* Header with gentle scroll reveal (once only) */}
       <motion.div
         ref={headerRef}
@@ -90,10 +90,6 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
               <h3 data-depth="1" className="text-2xl sm:text-3xl md:text-4xl font-medium text-[var(--text)] tracking-[-0.03em]">
                 {project.title}
               </h3>
-
-              <p className="mt-3 text-[1.0625rem] leading-[1.6] text-[rgba(245,245,245,0.7)] font-normal">
-                {project.summary}
-              </p>
             </div>
 
             {/* Key Engineered Capabilities (Highlights) */}

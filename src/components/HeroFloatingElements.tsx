@@ -129,6 +129,12 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
     let startTime = performance.now();
 
     const render = (now: number) => {
+      // Pause canvas dust particle rendering during programmatic nav scrolling
+      if (typeof document !== 'undefined' && document.documentElement.dataset.navScroll === '1') {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       const parent = canvas.parentElement;
       if (!parent) return;
       const width = parent.clientWidth;
