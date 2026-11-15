@@ -22,7 +22,7 @@ export interface ProjectItem {
   features: string[];
   architecture: string;
   highlightMetric?: string;
-  demoType: 'navgenie' | 'portfolio' | 'ai-crm' | 'medconsults';
+  demoType: 'portfolio' | 'medconsults';
 }
 
 export interface SkillCategory {

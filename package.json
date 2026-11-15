@@ -1,5 +1,6 @@
 {
   "name": "tapas-portfolio",
+  "description": "Portfolio website of Tapas Karmakar",
   "private": true,
   "version": "0.0.0",
   "type": "module",

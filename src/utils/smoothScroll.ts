@@ -259,7 +259,7 @@ export function scrollToSection(
 
   // 3. Pause Lenis and use NATIVE scrolling for the nav jump
   lenisInstance?.stop();
-  lenisInstance?.reset();
+  (lenisInstance as any)?.reset?.();
   document.documentElement.dataset.navScroll = '1';
   setNavScrollActive(true);
 
@@ -310,7 +310,7 @@ export function scrollToSection(
 
     // Restart Lenis and sync to new position
     if (lenisInstance) {
-      lenisInstance.reset();
+      (lenisInstance as any).reset?.();
       lenisInstance.start();
       lenisInstance.scrollTo(endY, { immediate: true, force: true });
     }
@@ -325,15 +325,6 @@ export function scrollToSection(
       if (window.location.hash) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
-    }
-
-    // Dev-only console log: [nav] id, from, target, end, result: ok | corrected(n) | timeout
-    if (import.meta.env.DEV) {
-      console.log(
-        `[nav] ${targetHashId || 'hero'}, from: ${Math.round(fromY)}, target: ${Math.round(y)}, end: ${Math.round(
-          endY
-        )}, result: ${result}`
-      );
     }
 
     // Hold clicked link active for 600ms, then let scroll-spy take over

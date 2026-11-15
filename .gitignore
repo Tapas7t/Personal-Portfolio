@@ -9,9 +9,10 @@ coverage/
 # Environment and secrets
 .env
 .env.*
+*.local
 !.env.example
 
-# IDE and local configuration
+# IDE and editor configurations
 .vscode/
 .idea/
 *.suo
@@ -30,8 +31,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Internal development tools and cache
-.aistudio/
+# Media and screen recordings
+*.mp4
+*.mov
+
+# Tooling and AI folders
+.agent/
+.agents/
+.gemini/
+.cursor/
+.claude/
 .antigravity/
+.aistudio/
 scratch/
 metadata.json
