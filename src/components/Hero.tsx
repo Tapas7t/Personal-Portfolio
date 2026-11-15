@@ -100,8 +100,8 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
       </motion.div>
 
       {/* Layer 3: Dark gradient overlay ensuring optimal contrast for hero text & buttons */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#06070a]/90 via-[#06070a]/50 to-transparent pointer-events-none z-[2]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-[#06070a]/40 pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/92 via-[#030712]/55 to-transparent pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-[#030712]/40 pointer-events-none z-[2]" />
 
       {/* Layer 3B: Floating Gold Objects & Fine Gold Dust */}
       {!isClone && <HeroFloatingElements heroRef={heroRef} />}
@@ -167,7 +167,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
                 <span>& </span>
                 <span
                   style={{ fontFamily: 'var(--font-serif)' }}
-                  className="font-serif-accent italic font-normal text-[1.12em] bg-gradient-to-b from-amber-200 via-[var(--gold-soft)] to-[var(--gold)] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(245,168,0,0.45)] inline-block select-none pr-1"
+                  className="font-serif-accent italic font-normal text-[1.12em] bg-gradient-to-b from-sky-100 via-[#38BDF8] to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(56,189,248,0.55)] inline-block select-none pr-1"
                 >
                   AI Enthusiast
                 </span>
@@ -197,7 +197,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
-              className="min-h-[44px] px-7 py-3 rounded-lg bg-[var(--text)] text-[#05060A] font-medium text-[0.75rem] uppercase tracking-[0.12em] hover:bg-slate-200 transition-colors shadow-sm flex items-center justify-center cursor-pointer"
+              className="min-h-[44px] px-7 py-3 rounded-lg bg-[var(--text)] text-[#030712] font-medium text-[0.75rem] uppercase tracking-[0.12em] hover:bg-slate-200 transition-colors shadow-sm flex items-center justify-center cursor-pointer"
             >
               Explore My Work
             </motion.a>

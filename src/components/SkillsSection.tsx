@@ -29,7 +29,7 @@ const TOOL_GROUPS: ToolGroup[] = [
       'CSS3',
       'Tailwind CSS',
     ],
-    accentColor: '#F5A800',
+    accentColor: '#38BDF8',
   },
   {
     id: 'backend',
@@ -43,7 +43,7 @@ const TOOL_GROUPS: ToolGroup[] = [
       'MongoDB',
       'Session-based authentication (email and password)',
     ],
-    accentColor: '#F5A800',
+    accentColor: '#38BDF8',
   },
   {
     id: 'tools',
@@ -51,7 +51,7 @@ const TOOL_GROUPS: ToolGroup[] = [
     description: 'Engineering workflows, developer environments, and version control tooling.',
     icon: Wrench,
     items: ['Git', 'GitHub', 'VS Code'],
-    accentColor: '#F5A800',
+    accentColor: '#38BDF8',
   },
 ];
 

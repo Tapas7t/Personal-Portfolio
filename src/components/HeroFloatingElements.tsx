@@ -159,10 +159,10 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
         );
 
         if (p.isLarge) {
-          // Soft out-of-focus golden bokeh glow for depth of field
+          // Soft out-of-focus cyan/ice-blue bokeh glow for depth of field
           const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2.2);
-          grad.addColorStop(0, `rgba(255, 225, 130, ${alpha})`);
-          grad.addColorStop(0.45, `rgba(255, 185, 55, ${alpha * 0.6})`);
+          grad.addColorStop(0, `rgba(224, 242, 254, ${alpha})`);
+          grad.addColorStop(0.45, `rgba(56, 189, 248, ${alpha * 0.6})`);
           grad.addColorStop(1, 'transparent');
           ctx.fillStyle = grad;
           ctx.beginPath();
@@ -170,7 +170,7 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
           ctx.fill();
         } else {
           // Sharp distant pinpoint
-          ctx.fillStyle = `rgba(255, 205, 80, ${alpha * 0.9})`;
+          ctx.fillStyle = `rgba(186, 230, 253, ${alpha * 0.9})`;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
           ctx.fill();
@@ -245,13 +245,13 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
           transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           className="w-5 h-5 flex items-center justify-center"
         >
-          <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-[0_0_12px_rgba(255,190,60,0.85)]">
+          <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-[0_0_12px_rgba(56,189,248,0.85)]">
             <defs>
               <radialGradient id="sparkle-grad" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#FFFFFF" />
-                <stop offset="35%" stopColor="#FFE58F" />
-                <stop offset="70%" stopColor="#FFA800" />
-                <stop offset="100%" stopColor="#D97706" />
+                <stop offset="35%" stopColor="#E0F2FE" />
+                <stop offset="70%" stopColor="#38BDF8" />
+                <stop offset="100%" stopColor="#0284C7" />
               </radialGradient>
             </defs>
             <path
@@ -290,13 +290,13 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
           }}
           className={`${
             isMobile ? 'w-8 h-8' : 'w-10 h-10'
-          } rounded-lg border border-amber-300/35 bg-gradient-to-br from-white/15 via-amber-300/[0.08] to-transparent backdrop-blur-md shadow-[inset_0_1px_2px_rgba(255,255,255,0.45),0_8px_22px_rgba(0,0,0,0.65),0_0_16px_rgba(255,190,60,0.18)]`}
+          } rounded-lg border border-sky-300/40 bg-gradient-to-br from-white/20 via-sky-300/[0.1] to-transparent backdrop-blur-md shadow-[inset_0_1px_2px_rgba(255,255,255,0.45),0_8px_22px_rgba(0,0,0,0.65),0_0_16px_rgba(56,189,248,0.25)]`}
         >
           <div className="absolute inset-1 rounded-md border-t border-l border-white/35 pointer-events-none" />
         </motion.div>
       </motion.div>
 
-      {/* 3. Gold Coin 1 (Bottom-Left on mobile & desktop) */}
+      {/* 3. Sapphire Coin 1 (Bottom-Left on mobile & desktop) */}
       <motion.div
         style={{
           left: isMobile ? '5%' : '11%',
@@ -322,10 +322,10 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
           }}
           className={`${
             isMobile ? 'w-8 h-8' : 'w-9 h-9'
-          } rounded-full bg-gradient-to-br from-[#FFF9E6] via-[#F6C358] to-[#78350f] p-[2px] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-2px_2.5px_rgba(0,0,0,0.7),0_6px_18px_rgba(0,0,0,0.7),0_0_14px_rgba(255,180,50,0.25)] border border-amber-300/80`}
+          } rounded-full bg-gradient-to-br from-[#F0F9FF] via-[#7DD3FC] to-[#0369A1] p-[2px] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-2px_2.5px_rgba(0,0,0,0.7),0_6px_18px_rgba(0,0,0,0.7),0_0_14px_rgba(56,189,248,0.35)] border border-sky-300/80`}
         >
-          <div className="w-full h-full rounded-full border border-amber-200/40 bg-gradient-to-tl from-[#B87A14] via-[#F6C358] to-[#FFF9E6] flex items-center justify-center">
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-200/30 border border-white/40" />
+          <div className="w-full h-full rounded-full border border-sky-200/40 bg-gradient-to-tl from-[#0284C7] via-[#7DD3FC] to-[#F0F9FF] flex items-center justify-center">
+            <div className="w-2.5 h-2.5 rounded-full bg-sky-200/30 border border-white/40" />
           </div>
         </motion.div>
       </motion.div>
@@ -333,7 +333,7 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
       {/* Desktop-Only Additional Objects (Total = 8 on desktop) */}
       {!isMobile && (
         <>
-          {/* 4. Metallic Gold Capsule / Pill (Top-Left, above title) */}
+          {/* 4. Metallic Sapphire Capsule / Pill (Top-Left, above title) */}
           <motion.div
             style={{
               left: '5%',
@@ -358,7 +358,7 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
                 transform: 'perspective(600px) rotateX(22deg) rotateY(-24deg) rotateZ(16deg)',
                 transformStyle: 'preserve-3d',
               }}
-              className="w-14 h-7 rounded-full bg-gradient-to-r from-[#FFF7D6] via-[#F6C358] to-[#92400e] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),inset_0_-2px_3px_rgba(0,0,0,0.6),0_8px_24px_rgba(0,0,0,0.7),0_0_16px_rgba(255,180,50,0.3)] border border-amber-200/70"
+              className="w-14 h-7 rounded-full bg-gradient-to-r from-[#F0F9FF] via-[#7DD3FC] to-[#0284C7] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.85),inset_0_-2px_3px_rgba(0,0,0,0.6),0_8px_24px_rgba(0,0,0,0.7),0_0_16px_rgba(56,189,248,0.4)] border border-sky-200/70"
             >
               <div className="absolute top-1 left-2.5 right-2.5 h-1 rounded-full bg-gradient-to-r from-white/70 via-white/20 to-transparent pointer-events-none" />
             </motion.div>
@@ -389,10 +389,10 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
                 transform: 'perspective(600px) rotateX(46deg) rotateY(16deg) rotateZ(-20deg)',
                 transformStyle: 'preserve-3d',
               }}
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFF9E6] via-[#F6C358] to-[#78350f] p-[2px] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-2px_2.5px_rgba(0,0,0,0.7),0_6px_18px_rgba(0,0,0,0.7),0_0_14px_rgba(255,180,50,0.25)] border border-amber-300/80"
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#F0F9FF] via-[#7DD3FC] to-[#0369A1] p-[2px] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-2px_2.5px_rgba(0,0,0,0.7),0_6px_18px_rgba(0,0,0,0.7),0_0_14px_rgba(56,189,248,0.35)] border border-sky-300/80"
             >
-              <div className="w-full h-full rounded-full border border-amber-200/40 bg-gradient-to-tl from-[#B87A14] via-[#F6C358] to-[#FFF9E6] flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-amber-200/30 border border-white/40" />
+              <div className="w-full h-full rounded-full border border-sky-200/40 bg-gradient-to-tl from-[#0284C7] via-[#7DD3FC] to-[#F0F9FF] flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-sky-200/30 border border-white/40" />
               </div>
             </motion.div>
           </motion.div>
@@ -421,13 +421,13 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
                 transform: 'perspective(600px) rotateX(38deg) rotateY(-18deg) rotateZ(14deg)',
                 transformStyle: 'preserve-3d',
               }}
-              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FFF9E6] via-[#F6C358] to-[#78350f] p-[2px] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-2px_2.5px_rgba(0,0,0,0.7),0_6px_18px_rgba(0,0,0,0.7),0_0_14px_rgba(255,180,50,0.25)] border border-amber-300/80"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#F0F9FF] via-[#7DD3FC] to-[#0369A1] p-[2px] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-2px_2.5px_rgba(0,0,0,0.7),0_6px_18px_rgba(0,0,0,0.7),0_0_14px_rgba(56,189,248,0.35)] border border-sky-300/80"
             >
-              <div className="w-full h-full rounded-full border border-amber-200/40 bg-gradient-to-tl from-[#B87A14] via-[#F6C358] to-[#FFF9E6]" />
+              <div className="w-full h-full rounded-full border border-sky-200/40 bg-gradient-to-tl from-[#0284C7] via-[#7DD3FC] to-[#F0F9FF]" />
             </motion.div>
           </motion.div>
 
-          {/* 7. Thin Gold Ring (Top-Right, above photo head) */}
+          {/* 7. Thin Cyan / Sapphire Ring (Top-Right, above photo head) */}
           <motion.div
             style={{
               right: '12%',
@@ -454,14 +454,14 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
               }}
               className="w-12 h-12 flex items-center justify-center"
             >
-              <svg viewBox="0 0 48 48" className="w-full h-full drop-shadow-[0_6px_16px_rgba(0,0,0,0.8)] drop-shadow-[0_0_12px_rgba(255,190,60,0.35)]">
+              <svg viewBox="0 0 48 48" className="w-full h-full drop-shadow-[0_6px_16px_rgba(0,0,0,0.8)] drop-shadow-[0_0_12px_rgba(56,189,248,0.45)]">
                 <defs>
                   <linearGradient id="gold-ring-grad" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stopColor="#FFFFFF" />
-                    <stop offset="25%" stopColor="#FFF2B2" />
-                    <stop offset="55%" stopColor="#F6C358" />
-                    <stop offset="85%" stopColor="#B87A14" />
-                    <stop offset="100%" stopColor="#633108" />
+                    <stop offset="25%" stopColor="#E0F2FE" />
+                    <stop offset="55%" stopColor="#7DD3FC" />
+                    <stop offset="85%" stopColor="#0284C7" />
+                    <stop offset="100%" stopColor="#075985" />
                   </linearGradient>
                 </defs>
                 <circle cx="24" cy="24" r="19" fill="none" stroke="url(#gold-ring-grad)" strokeWidth="3" />
@@ -493,7 +493,7 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
                 transform: 'perspective(600px) rotateX(32deg) rotateY(36deg) rotateZ(-8deg)',
                 transformStyle: 'preserve-3d',
               }}
-              className="w-8 h-8 rounded-lg border border-amber-300/35 bg-gradient-to-br from-white/15 via-amber-300/[0.08] to-transparent backdrop-blur-md shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),0_8px_20px_rgba(0,0,0,0.65),0_0_15px_rgba(255,190,60,0.15)]"
+              className="w-8 h-8 rounded-lg border border-sky-300/40 bg-gradient-to-br from-white/20 via-sky-300/[0.1] to-transparent backdrop-blur-md shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),0_8px_20px_rgba(0,0,0,0.65),0_0_15px_rgba(56,189,248,0.22)]"
             >
               <div className="absolute inset-1 rounded-md border-t border-l border-white/30 pointer-events-none" />
             </motion.div>

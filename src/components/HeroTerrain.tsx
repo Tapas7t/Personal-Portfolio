@@ -196,7 +196,7 @@ export const HeroTerrain: React.FC<HeroTerrainProps> = ({ heroRef }) => {
         const b3 = { x: groundX - halfW, y: groundY };     // ground-left
 
         // Left face (front-left dark shadow):
-        ctx.fillStyle = `rgba(10, 12, 17, ${alpha * 0.95})`;
+        ctx.fillStyle = `rgba(7, 11, 20, ${alpha * 0.95})`;
         ctx.beginPath();
         ctx.moveTo(p3.x, p3.y);
         ctx.lineTo(p2.x, p2.y);
@@ -206,7 +206,7 @@ export const HeroTerrain: React.FC<HeroTerrainProps> = ({ heroRef }) => {
         ctx.fill();
 
         // Right face (front-right mid-shadow):
-        ctx.fillStyle = `rgba(13, 15, 21, ${alpha * 0.95})`;
+        ctx.fillStyle = `rgba(9, 14, 25, ${alpha * 0.95})`;
         ctx.beginPath();
         ctx.moveTo(p2.x, p2.y);
         ctx.lineTo(p1.x, p1.y);
@@ -215,11 +215,11 @@ export const HeroTerrain: React.FC<HeroTerrainProps> = ({ heroRef }) => {
         ctx.closePath();
         ctx.fill();
 
-        // Top face (matte charcoal with subtle elevation lighting):
+        // Top face (matte nocturnal navy with subtle elevation lighting):
         const normH = Math.min(1, Math.max(0, (h - 10) / 36));
-        const rVal = Math.round(18 + normH * 10);
-        const gVal = Math.round(20 + normH * 10);
-        const bVal = Math.round(27 + normH * 12);
+        const rVal = Math.round(12 + normH * 8);
+        const gVal = Math.round(18 + normH * 10);
+        const bVal = Math.round(30 + normH * 14);
         ctx.fillStyle = `rgba(${rVal}, ${gVal}, ${bVal}, ${alpha * 0.96})`;
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
@@ -234,8 +234,8 @@ export const HeroTerrain: React.FC<HeroTerrainProps> = ({ heroRef }) => {
         ctx.lineWidth = 0.75;
         ctx.stroke();
 
-        // Faint gold rim light on upper edges:
-        ctx.strokeStyle = `rgba(255, 196, 70, ${alpha * (0.10 + normH * 0.16)})`;
+        // Faint ice cyan rim light on upper edges:
+        ctx.strokeStyle = `rgba(56, 189, 248, ${alpha * (0.12 + normH * 0.20)})`;
         ctx.lineWidth = 1.1;
         ctx.beginPath();
         ctx.moveTo(p3.x, p3.y);

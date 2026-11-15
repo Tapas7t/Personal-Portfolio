@@ -45,7 +45,7 @@ export const TECH_MAP: Record<string, TechMeta> = {
 export const TechTile: React.FC<{ name: string; className?: string }> = ({ name, className = '' }) => {
   const meta = TECH_MAP[name];
   const Icon = meta ? meta.icon : Code2;
-  const color = meta ? meta.color : '#F5A800';
+  const color = meta ? meta.color : '#38BDF8';
 
   return (
     <div

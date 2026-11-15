@@ -27,7 +27,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen text-[var(--text)] selection:bg-[var(--gold)]/30 selection:text-amber-200">
+    <div className="relative min-h-screen text-[var(--text)] selection:bg-[var(--gold)]/30 selection:text-sky-200">
       {/* Dynamic Animated Backdrop & Film Grain with Developer Portrait */}
       <AnimatedBackground />
 

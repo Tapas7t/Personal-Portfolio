@@ -27,7 +27,7 @@ const NavLink: React.FC<NavLinkProps> = ({ href, label, isActive, onClick }) => 
       {isActive && (
         <motion.div
           layoutId="active-navbar-indicator"
-          className="absolute bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-[var(--gold)] via-[var(--gold-soft)] to-[var(--gold)] rounded-full shadow-[0_0_10px_rgba(245,168,0,0.85)]"
+          className="absolute bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-sky-400 via-[#38BDF8] to-blue-500 rounded-full shadow-[0_0_10px_rgba(56,189,248,0.85)]"
           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
         />
       )}
@@ -356,7 +356,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                   pathLength="100"
                   className="nav-border-rect nav-beam-track"
                 />
-                {/* b) glow: stroke #ffb938, 1.5px, filter blur(2px), opacity .55, stroke-dasharray "7 93", stroke-linecap round */}
+                {/* b) glow: stroke #38bdf8, 1.5px, filter blur(2px), opacity .75, stroke-dasharray "7 93", stroke-linecap round */}
                 <rect
                   x="1"
                   y="1"
@@ -365,9 +365,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                   rx={rectRx}
                   pathLength="100"
                   mask="url(#nav-beam-glow-mask)"
+                  stroke="#38bdf8"
                   className="nav-border-rect nav-beam-glow"
                 />
-                {/* c) core: stroke #ffe3a0, 1px, stroke-dasharray "7 93", stroke-linecap round */}
+                {/* c) core: stroke #e0f2fe, 1px, stroke-dasharray "7 93", stroke-linecap round */}
                 <rect
                   x="1"
                   y="1"
@@ -375,13 +376,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                   height={rectH}
                   rx={rectRx}
                   pathLength="100"
+                  stroke="#e0f2fe"
                   className="nav-border-rect nav-beam-core"
                 />
               </>
             )}
           </svg>
 
-          {/* 3D Embossed Metallic Gold Wordmark: TAPAS (lifted with translateZ(12px)) */}
+          {/* 3D Embossed Icy Sapphire Wordmark: TAPAS (lifted with translateZ(12px)) */}
           <a
             href="#hero"
             onClick={(e) => {
@@ -398,20 +400,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             <span
               style={{
                 filter:
-                  'drop-shadow(0 1px 0 #92400e) drop-shadow(0 2px 0 #78350f) drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 14px rgba(255,168,0,0.35))',
+                  'drop-shadow(0 1px 0 #0369a1) drop-shadow(0 2px 0 #075985) drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 14px rgba(56,189,248,0.45))',
               }}
-              className="bg-gradient-to-b from-[#FFF7D6] via-[#F6C358] to-[#B87A14] bg-clip-text text-transparent font-black"
+              className="bg-gradient-to-b from-[#F0F9FF] via-[#7DD3FC] to-[#0284C7] bg-clip-text text-transparent font-black"
             >
               T
             </span>
 
-            {/* A (Distinctly brighter, radiant golden accent) */}
+            {/* A (Distinctly brighter, radiant sapphire cyan accent) */}
             <span
               style={{
                 filter:
-                  'drop-shadow(0 1px 0 #b45309) drop-shadow(0 2px 0 #92400e) drop-shadow(0 4px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(255,200,60,0.7))',
+                  'drop-shadow(0 1px 0 #0284c7) drop-shadow(0 2px 0 #0369a1) drop-shadow(0 4px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(56,189,248,0.85))',
               }}
-              className="bg-gradient-to-b from-[#FFFFFF] via-[#FFE27D] to-[#FFA800] bg-clip-text text-transparent font-black px-0.5"
+              className="bg-gradient-to-b from-[#FFFFFF] via-[#BAE6FD] to-[#38BDF8] bg-clip-text text-transparent font-black px-0.5"
             >
               A
             </span>
@@ -420,15 +422,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             <span
               style={{
                 filter:
-                  'drop-shadow(0 1px 0 #92400e) drop-shadow(0 2px 0 #78350f) drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 14px rgba(255,168,0,0.35))',
+                  'drop-shadow(0 1px 0 #0369a1) drop-shadow(0 2px 0 #075985) drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 14px rgba(56,189,248,0.45))',
               }}
-              className="bg-gradient-to-b from-[#FFF7D6] via-[#F6C358] to-[#B87A14] bg-clip-text text-transparent font-black"
+              className="bg-gradient-to-b from-[#F0F9FF] via-[#7DD3FC] to-[#0284C7] bg-clip-text text-transparent font-black"
             >
               PAS
             </span>
           </a>
 
-          {/* Desktop Navigation Links with Smooth Sliding Gold Indicator */}
+          {/* Desktop Navigation Links with Smooth Sliding Indicator */}
           <nav
             className="hidden md:flex items-center gap-1 lg:gap-2 relative z-10"
             aria-label="Main Navigation"
@@ -444,7 +446,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             ))}
           </nav>
 
-          {/* Primary CTA: Outlined Gold Pill with Soft Glow & Arrow Shift (lifted with translateZ(12px)) */}
+          {/* Primary CTA: Outlined Cyan/Blue Pill with Soft Glow & Arrow Shift (lifted with translateZ(12px)) */}
           <div
             style={{ transform: 'translateZ(12px)' }}
             className="hidden md:flex items-center gap-3 shrink-0 relative z-10 will-change-transform"
@@ -454,10 +456,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
               whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.18 }}
-              className="group flex items-center gap-2 px-5 py-2 min-h-[44px] text-[0.75rem] font-sans font-semibold uppercase tracking-[0.12em] text-[var(--gold)] hover:text-[var(--gold-soft)] bg-[var(--gold)]/[0.08] hover:bg-[var(--gold)]/[0.18] border border-[var(--gold)]/80 hover:border-[var(--gold-soft)] rounded-full transition-all duration-200 shadow-[0_0_15px_rgba(245,168,0,0.18)] hover:shadow-[0_0_28px_rgba(245,168,0,0.45)] whitespace-nowrap shrink-0 cursor-pointer"
+              className="group flex items-center gap-2 px-5 py-2 min-h-[44px] text-[0.75rem] font-sans font-semibold uppercase tracking-[0.12em] text-[#38BDF8] hover:text-sky-200 bg-sky-400/[0.08] hover:bg-sky-400/[0.2] border border-sky-400/80 hover:border-sky-300 rounded-full transition-all duration-200 shadow-[0_0_15px_rgba(56,189,248,0.22)] hover:shadow-[0_0_28px_rgba(56,189,248,0.5)] whitespace-nowrap shrink-0 cursor-pointer"
             >
               <span>Get In Touch</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[var(--gold)] group-hover:text-[var(--gold-soft)] transition-transform duration-250 ease-out group-hover:translate-x-1.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#38BDF8] group-hover:text-sky-200 transition-transform duration-250 ease-out group-hover:translate-x-1.5" />
             </motion.button>
           </div>
 
@@ -482,7 +484,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              backgroundColor: 'rgba(11, 13, 20, 0.94)',
+              backgroundColor: 'rgba(8, 14, 28, 0.94)',
               WebkitBackdropFilter: 'blur(28px) saturate(180%)',
               backdropFilter: 'blur(28px) saturate(180%)',
               boxShadow: `

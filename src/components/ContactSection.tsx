@@ -49,7 +49,7 @@ export const ContactSection: React.FC = () => {
             CONTACT
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-[var(--text)] tracking-[-0.03em] leading-[1.1]">
-            Let's Build Something <span className="bg-gradient-to-r from-amber-400 via-[var(--gold)] to-amber-300 bg-clip-text text-transparent">Together</span>
+            Let's Build Something <span className="bg-gradient-to-r from-sky-400 via-[#38BDF8] to-blue-500 bg-clip-text text-transparent">Together</span>
           </h2>
           <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-[rgba(245,245,245,0.7)] font-normal">
             Have an interesting idea, a project opportunity, or want to connect? I'm always open to conversations with developers, technology enthusiasts, and people building meaningful products.
