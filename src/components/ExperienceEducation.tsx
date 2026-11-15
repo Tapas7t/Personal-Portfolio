@@ -40,27 +40,27 @@ const ExperienceCard: React.FC<{ timelineScaleY: MotionValue<number> }> = ({ tim
         <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-800 pointer-events-none">
           <motion.div
             style={{ scaleY: timelineScaleY }}
-            className="w-full h-full bg-gradient-to-b from-[#FFA800] to-transparent origin-top will-change-transform"
+            className="w-full h-full bg-gradient-to-b from-[var(--gold)] to-transparent origin-top will-change-transform"
           />
         </div>
 
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800">
+            <span className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[rgba(245,245,245,0.7)] bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800">
               May 2026 – September 2026
             </span>
           </div>
 
           <div>
-            <h3 data-depth="1" className="text-xl font-bold text-white leading-snug">
-              Business Development Executive – <span className="text-amber-400 font-semibold">Diglok Trainer</span>
+            <h3 data-depth="1" className="text-xl font-medium text-[var(--text)] tracking-[-0.02em] leading-snug">
+              Business Development Executive – <span className="text-[var(--gold)] font-medium">Diglok Trainer</span>
             </h3>
           </div>
 
-          <ul className="space-y-2.5 text-xs text-slate-300 pt-1">
+          <ul className="space-y-2.5 text-sm text-[rgba(245,245,245,0.7)] pt-1">
             {bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--gold)] shrink-0 mt-0.5" />
                 <span className="leading-relaxed">{bullet}</span>
               </li>
             ))}
@@ -107,33 +107,33 @@ const EducationCard: React.FC<{ timelineScaleY: MotionValue<number> }> = ({ time
         <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-800 pointer-events-none">
           <motion.div
             style={{ scaleY: timelineScaleY }}
-            className="w-full h-full bg-gradient-to-b from-[#FFA800] to-transparent origin-top will-change-transform"
+            className="w-full h-full bg-gradient-to-b from-[var(--gold)] to-transparent origin-top will-change-transform"
           />
         </div>
 
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800">
+            <span className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[rgba(245,245,245,0.7)] bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800">
               2023 – 2026
             </span>
-            <span className="text-xs font-mono text-amber-400 font-bold bg-amber-400/10 px-2.5 py-1 rounded-md border border-amber-400/30">
+            <span className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)] bg-[var(--gold)]/10 px-2.5 py-1 rounded-md border border-[var(--gold)]/30">
               CGPA: 6.95/10
             </span>
           </div>
 
           <div>
-            <h3 data-depth="1" className="text-xl font-bold text-white leading-snug">
+            <h3 data-depth="1" className="text-xl font-medium text-[var(--text)] tracking-[-0.02em] leading-snug">
               Bachelor of Science in Information Technology (B.Sc. IT)
             </h3>
-            <div className="text-sm text-amber-400 font-medium mt-0.5">
+            <div className="text-sm text-[var(--gold)] font-normal mt-0.5">
               University of Mumbai (Vasai College of Science and Technology)
             </div>
           </div>
 
-          <ul className="space-y-2.5 text-xs text-slate-300 pt-1">
+          <ul className="space-y-2.5 text-sm text-[rgba(245,245,245,0.7)] pt-1">
             {coreSubjects.map((subject, idx) => (
               <li key={idx} className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--gold)] shrink-0 mt-0.5" />
                 <span className="leading-relaxed">{subject}</span>
               </li>
             ))}
@@ -184,10 +184,10 @@ export const ExperienceEducation: React.FC = () => {
         }}
         className="mb-12 relative z-10"
       >
-        <div className="text-xs font-mono text-[#FFA800] uppercase tracking-widest mb-2">
+        <div className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)] mb-2">
           CAREER & ACADEMIA
         </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-[var(--text)] tracking-[-0.03em] leading-[1.1]">
           Experience & Education
         </h2>
       </motion.div>

@@ -19,15 +19,15 @@ const NavLink: React.FC<NavLinkProps> = ({ href, label, isActive, onClick }) => 
     <a
       href={href}
       onClick={onClick}
-      className={`relative px-3 py-2 min-h-[44px] flex items-center text-[11px] lg:text-xs font-sans uppercase tracking-wider transition-colors duration-200 whitespace-nowrap shrink-0 group select-none ${
-        isActive ? 'text-white font-bold' : 'text-slate-300 hover:text-white font-medium'
+      className={`relative px-3 py-2 min-h-[44px] flex items-center text-[0.75rem] font-sans uppercase tracking-[0.12em] transition-colors duration-200 whitespace-nowrap shrink-0 group select-none ${
+        isActive ? 'text-[var(--text)] font-semibold' : 'text-[rgba(245,245,245,0.55)] hover:text-[var(--text)] font-medium'
       }`}
     >
       <span className="relative z-10 transition-colors duration-200">{label}</span>
       {isActive && (
         <motion.div
           layoutId="active-navbar-indicator"
-          className="absolute bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-amber-400 via-[#FFA800] to-amber-300 rounded-full shadow-[0_0_10px_rgba(255,168,0,0.85)]"
+          className="absolute bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-[var(--gold)] via-[var(--gold-soft)] to-[var(--gold)] rounded-full shadow-[0_0_10px_rgba(245,168,0,0.85)]"
           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
         />
       )}
@@ -454,10 +454,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
               whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.18 }}
-              className="group flex items-center gap-2 px-5 py-2 min-h-[44px] text-xs font-sans font-bold uppercase tracking-wider text-[#FFA800] hover:text-amber-200 bg-amber-400/[0.08] hover:bg-amber-400/[0.2] border border-amber-400/80 hover:border-amber-300 rounded-full transition-all duration-200 shadow-[0_0_15px_rgba(255,168,0,0.18)] hover:shadow-[0_0_28px_rgba(255,168,0,0.45)] whitespace-nowrap shrink-0 cursor-pointer"
+              className="group flex items-center gap-2 px-5 py-2 min-h-[44px] text-[0.75rem] font-sans font-semibold uppercase tracking-[0.12em] text-[var(--gold)] hover:text-[var(--gold-soft)] bg-[var(--gold)]/[0.08] hover:bg-[var(--gold)]/[0.18] border border-[var(--gold)]/80 hover:border-[var(--gold-soft)] rounded-full transition-all duration-200 shadow-[0_0_15px_rgba(245,168,0,0.18)] hover:shadow-[0_0_28px_rgba(245,168,0,0.45)] whitespace-nowrap shrink-0 cursor-pointer"
             >
               <span>Get In Touch</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#FFA800] group-hover:text-amber-200 transition-transform duration-250 ease-out group-hover:translate-x-1.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-[var(--gold)] group-hover:text-[var(--gold-soft)] transition-transform duration-250 ease-out group-hover:translate-x-1.5" />
             </motion.button>
           </div>
 
@@ -466,10 +466,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="min-h-[44px] min-w-[44px] p-2 flex items-center justify-center text-slate-300 hover:text-white rounded-full border border-white/10 bg-slate-900/60 transition-colors"
+              className="min-h-[44px] min-w-[44px] p-2 flex items-center justify-center text-[rgba(245,245,245,0.7)] hover:text-white rounded-full border border-white/10 bg-[var(--surface)]/80 transition-colors"
               aria-label="Toggle mobile navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5 text-amber-400" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[var(--gold)]" /> : <Menu className="w-5 h-5" />}
             </motion.button>
           </div>
         </div>
@@ -482,7 +482,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              backgroundColor: 'rgba(10, 12, 18, 0.92)',
+              backgroundColor: 'rgba(11, 13, 20, 0.94)',
               WebkitBackdropFilter: 'blur(28px) saturate(180%)',
               backdropFilter: 'blur(28px) saturate(180%)',
               boxShadow: `
@@ -501,10 +501,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                     scrollToSection(e, link.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`min-h-[44px] px-3.5 py-2.5 text-xs font-sans uppercase tracking-wider flex items-center rounded-xl transition-colors ${
+                  className={`min-h-[44px] px-3.5 py-2.5 text-[0.75rem] font-sans uppercase tracking-[0.12em] flex items-center rounded-xl transition-colors ${
                     activeSection === link.id
-                      ? 'text-[#FFA800] font-bold bg-amber-400/10 border border-amber-400/20'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                      ? 'text-[var(--gold)] font-semibold bg-[var(--gold)]/10 border border-[var(--gold)]/20'
+                      : 'text-[rgba(245,245,245,0.65)] hover:text-white hover:bg-white/[0.05] font-medium'
                   }`}
                 >
                   {link.label}
@@ -519,7 +519,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
                   setMobileMenuOpen(false);
                   onOpenContact();
                 }}
-                className="w-full min-h-[44px] py-2.5 px-4 text-xs font-sans font-bold uppercase tracking-wider text-[#FFA800] bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/80 rounded-full transition-colors text-center flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(255,168,0,0.18)]"
+                className="w-full min-h-[44px] py-2.5 px-4 text-[0.75rem] font-sans font-semibold uppercase tracking-[0.12em] text-[var(--gold)] bg-[var(--gold)]/10 hover:bg-[var(--gold)]/20 border border-[var(--gold)]/80 rounded-full transition-colors text-center flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(245,168,0,0.18)]"
               >
                 <span>Get In Touch</span>
                 <ArrowRight className="w-3.5 h-3.5" />

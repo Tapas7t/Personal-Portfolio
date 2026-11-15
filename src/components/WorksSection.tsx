@@ -44,10 +44,10 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
         }}
         className="mb-12"
       >
-        <div className="text-xs font-mono text-[#FFA800] uppercase tracking-widest mb-2">
+        <div className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)] mb-2">
           FEATURED PROJECT
         </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-[var(--text)] tracking-[-0.03em] leading-[1.1]">
           Selected Work
         </h2>
       </motion.div>
@@ -75,39 +75,39 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
             {/* Card Header Row */}
             <div>
               <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                <span className="text-xs font-mono text-amber-400 font-medium tracking-wide">
+                <span className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)]">
                   {project.subtitle}
                 </span>
 
                 {isDevelopment && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-[11px] font-mono text-amber-300 font-semibold uppercase tracking-wider">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--gold-soft)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] animate-pulse" />
                     <span>{medconsultsConfig.status}</span>
                   </span>
                 )}
               </div>
 
-              <h3 data-depth="1" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+              <h3 data-depth="1" className="text-2xl sm:text-3xl md:text-4xl font-medium text-[var(--text)] tracking-[-0.03em]">
                 {project.title}
               </h3>
 
-              <p className="mt-3 text-sm md:text-base text-slate-300 leading-relaxed font-normal">
+              <p className="mt-3 text-[1.0625rem] leading-[1.6] text-[rgba(245,245,245,0.7)] font-normal">
                 {project.summary}
               </p>
             </div>
 
             {/* Key Engineered Capabilities (Highlights) */}
             <div className="space-y-3 pt-2">
-              <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
+              <div className="text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[rgba(245,245,245,0.55)]">
                 Key Highlights & Architecture
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {project.features.map((feature, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-xs text-slate-300 leading-relaxed"
+                    className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-sm text-[rgba(245,245,245,0.7)] leading-relaxed"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -116,10 +116,10 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
 
             {/* Technologies Tiles with Real Logos */}
             <div data-depth="1" className="pt-4 border-t border-slate-800/80 space-y-3">
-              <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
+              <div className="text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[rgba(245,245,245,0.55)]">
                 Technologies
               </div>
-              <div className="flex flex-wrap gap-2 text-xs font-mono">
+              <div className="flex flex-wrap gap-2 text-xs">
                 {project.technologies.map((t) => (
                   <TechTile key={t} name={t} />
                 ))}
@@ -133,12 +133,12 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-h-[44px] px-5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-400/50 text-xs font-mono font-medium text-white transition-all flex items-center justify-center gap-2 group/btn"
+                className="min-h-[44px] px-5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-[var(--gold)]/50 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--text)] transition-all flex items-center justify-center gap-2 group/btn"
                 title={medconsultsConfig.github.trim() ? 'Open GitHub Repository' : 'Open Developer GitHub Profile'}
               >
-                <Github className="w-4 h-4 text-slate-300 group-hover/btn:text-amber-400 transition-colors" />
+                <Github className="w-4 h-4 text-slate-300 group-hover/btn:text-[var(--gold)] transition-colors" />
                 <span>{medconsultsConfig.github.trim() ? 'View Repository' : 'GitHub (Profile)'}</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-amber-400 group-hover/btn:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-[var(--gold)] group-hover/btn:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
               </a>
 
               {/* Live Demo Button (Active vs Disabled Coming Soon) */}
@@ -147,7 +147,7 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
                   href={medconsultsConfig.liveDemo.trim()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="min-h-[44px] px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm"
+                  className="min-h-[44px] px-5 py-2.5 rounded-lg bg-[var(--gold)] hover:bg-[var(--gold-soft)] text-slate-950 text-[0.75rem] uppercase tracking-[0.12em] font-semibold transition-all flex items-center justify-center gap-2 shadow-sm"
                 >
                   <span>Live Demo</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -157,7 +157,7 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
                   type="button"
                   disabled
                   aria-disabled="true"
-                  className="min-h-[44px] px-5 py-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80 text-slate-500 text-xs font-mono font-medium tracking-wide flex items-center justify-center gap-2 cursor-not-allowed select-none opacity-80"
+                  className="min-h-[44px] px-5 py-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80 text-[var(--muted)] text-[0.75rem] uppercase tracking-[0.12em] font-medium flex items-center justify-center gap-2 cursor-not-allowed select-none opacity-80"
                   title="Live deployment is currently in development"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
@@ -169,7 +169,7 @@ export const WorksSection: React.FC<WorksSectionProps> = ({
                 <button
                   type="button"
                   onClick={() => onSelectProject(project)}
-                  className="min-h-[44px] px-4 py-2.5 text-xs font-mono text-slate-400 hover:text-amber-400 transition-colors ml-auto hidden sm:inline-flex items-center gap-1"
+                  className="min-h-[44px] px-4 py-2.5 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[rgba(245,245,245,0.55)] hover:text-[var(--gold)] transition-colors ml-auto hidden sm:inline-flex items-center gap-1"
                 >
                   <span>System Overview</span>
                   <span>→</span>

@@ -111,10 +111,10 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-wrap items-center text-xs font-mono uppercase tracking-widest text-slate-400 pt-2 z-10 break-words"
+        className="flex flex-wrap items-center text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[rgba(245,245,245,0.55)] pt-2 z-10 break-words"
       >
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+          <span className="w-2 h-2 rounded-full bg-[var(--gold)] shrink-0" />
           <span>STATUS · AVAILABLE FOR ROLES · MUMBAI, INDIA</span>
         </div>
       </motion.div>
@@ -122,18 +122,18 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
       {/* Layer 4: Main Typography & Statement with Clean, Staggered Entrance & 3D Title Tilt */}
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="my-auto py-8 md:py-16 select-none relative z-10 max-w-5xl"
+        className="my-auto py-4 sm:py-6 md:py-8 select-none relative z-10 max-w-5xl"
       >
-        <div className="space-y-6">
-          <div className="space-y-3">
+        <div className="space-y-5 sm:space-y-6">
+          <div className="space-y-2.5 sm:space-y-3">
             {/* Professional Category Label */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#FFA800]"
+              className="inline-flex items-center gap-2 text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)]"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFA800]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
               <span>FULL-STACK DEVELOPER · AI ENTHUSIAST</span>
             </motion.div>
 
@@ -151,7 +151,8 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] break-words"
+                style={{ fontFamily: 'var(--font-hero)' }}
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-[4rem] font-medium tracking-[-0.035em] text-[var(--text)] leading-[1.08] break-words"
               >
                 Full-Stack Developer
               </motion.h1>
@@ -160,10 +161,16 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] break-words"
+                style={{ fontFamily: 'var(--font-hero)' }}
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-[4rem] font-medium tracking-[-0.035em] text-[var(--text)] leading-[1.08] break-words"
               >
                 <span>& </span>
-                <span className="text-[#FFA800]">AI Enthusiast</span>
+                <span
+                  style={{ fontFamily: 'var(--font-serif)' }}
+                  className="font-serif-accent italic font-normal text-[1.12em] bg-gradient-to-b from-amber-200 via-[var(--gold-soft)] to-[var(--gold)] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(245,168,0,0.45)] inline-block select-none pr-1"
+                >
+                  AI Enthusiast
+                </span>
               </motion.div>
             </motion.div>
           </div>
@@ -173,7 +180,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-2xl text-base sm:text-lg text-slate-300 font-normal leading-relaxed"
+            className="max-w-2xl text-base sm:text-lg leading-relaxed text-[rgba(245,245,245,0.7)] font-normal"
           >
             Building modern web applications and practical AI solutions.
           </motion.p>
@@ -190,7 +197,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
-              className="min-h-[44px] px-7 py-3 rounded-lg bg-white text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors shadow-sm flex items-center justify-center cursor-pointer"
+              className="min-h-[44px] px-7 py-3 rounded-lg bg-[var(--text)] text-[#05060A] font-medium text-[0.75rem] uppercase tracking-[0.12em] hover:bg-slate-200 transition-colors shadow-sm flex items-center justify-center cursor-pointer"
             >
               Explore My Work
             </motion.a>
@@ -203,13 +210,13 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.58, ease: [0.16, 1, 0.3, 1] }}
-        className="pt-8 border-t border-slate-800/80 text-xs font-mono text-slate-400 z-10"
+        className="pt-8 border-t border-slate-800/80 text-[0.75rem] text-[var(--muted)] z-10"
       >
         <div className="space-y-1">
-          <div className="text-slate-400 uppercase tracking-widest font-semibold">
+          <div className="text-[rgba(245,245,245,0.55)] uppercase tracking-[0.12em] font-medium">
             ENGINEERING & WEB TECHNOLOGIES
           </div>
-          <div className="text-slate-200 break-words">
+          <div className="text-[var(--text)] text-[0.9375rem] break-words">
             HTML · CSS · JavaScript · React · Node.js · Express.js · MongoDB · Git · GitHub
           </div>
         </div>
@@ -221,14 +228,14 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         aria-label="Scroll to Works"
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-        className="hidden md:flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1.5 absolute bottom-10 right-8 text-slate-500 hover:text-white transition-colors cursor-pointer group z-20"
+        className="hidden md:flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1.5 absolute bottom-10 right-8 text-[rgba(245,245,245,0.4)] hover:text-white transition-colors cursor-pointer group z-20"
       >
-        <span className="text-[10px] font-mono tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="text-[0.75rem] font-sans tracking-[0.12em] uppercase opacity-0 group-hover:opacity-100 transition-opacity">
           Scroll
         </span>
-        <div className="w-[1px] h-10 bg-gradient-to-b from-transparent via-slate-600 to-slate-400 group-hover:to-[#FFA800] transition-colors" />
+        <div className="w-[1px] h-10 bg-gradient-to-b from-transparent via-white/20 to-white/40 group-hover:to-[var(--gold)] transition-colors" />
         <svg
-          className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FFA800] group-hover:translate-y-1 transition-all"
+          className="w-3.5 h-3.5 text-[rgba(245,245,245,0.5)] group-hover:text-[var(--gold)] group-hover:translate-y-1 transition-all"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

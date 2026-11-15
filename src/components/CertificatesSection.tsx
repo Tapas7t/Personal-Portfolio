@@ -65,21 +65,21 @@ const CertificateCard: React.FC<{ item: CertificateItem; index: number }> = ({ i
       <GlassCard className="flex flex-col justify-between p-6 sm:p-8 space-y-6 w-full select-none cursor-pointer">
         <div className="space-y-4">
           {/* Date row */}
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-400">
-            <span className="bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800 text-slate-300">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[rgba(245,245,245,0.55)]">
+            <span className="bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800 text-[rgba(245,245,245,0.7)]">
               {item.date}
             </span>
           </div>
 
           {/* Course Title */}
           <div className="space-y-2">
-            <h3 data-depth="1" className="text-xl font-bold text-white leading-snug">
+            <h3 data-depth="1" className="text-xl font-medium text-[var(--text)] tracking-[-0.02em] leading-snug">
               {item.title}
             </h3>
-            <div className="text-sm font-mono text-slate-300">
-              <span className="text-amber-400 font-semibold">{item.issuer}</span>
+            <div className="text-sm text-[rgba(245,245,245,0.7)]">
+              <span className="text-[var(--gold)] font-medium">{item.issuer}</span>
               <span className="text-slate-500 mx-2">·</span>
-              <span className="text-slate-400">Instructor: {item.instructor}</span>
+              <span className="text-[var(--muted)]">Instructor: {item.instructor}</span>
             </div>
           </div>
         </div>
@@ -90,10 +90,10 @@ const CertificateCard: React.FC<{ item: CertificateItem; index: number }> = ({ i
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/link min-h-[44px] inline-flex items-center gap-2 text-xs font-mono font-medium text-slate-200 hover:text-amber-400 transition-colors"
+            className="group/link min-h-[44px] inline-flex items-center gap-2 text-[0.75rem] uppercase tracking-[0.12em] font-medium text-[var(--text)] hover:text-[var(--gold)] transition-colors"
           >
             <span>View Certificate</span>
-            <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover/link:text-amber-400 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 duration-200 shrink-0" />
+            <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover/link:text-[var(--gold)] transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 duration-200 shrink-0" />
           </a>
         </div>
       </GlassCard>
@@ -134,14 +134,14 @@ export const CertificatesSection: React.FC = () => {
         }}
         className="mb-12 sm:mb-16 text-center relative z-10"
       >
-        <div className="text-xs font-mono text-[#FFA800] uppercase tracking-widest mb-2.5">
+        <div className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)] mb-2.5">
           CERTIFICATIONS
         </div>
-        <h2 className="font-serif-accent italic text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight inline-block select-none">
+        <h2 className="font-serif-accent italic text-3xl sm:text-4xl md:text-5xl font-normal tracking-[-0.03em] inline-block select-none leading-[1.1]">
           <span className="bg-gradient-to-b from-amber-50 via-amber-200 to-amber-300 bg-clip-text text-transparent">
             Certi
           </span>
-          <span className="bg-gradient-to-b from-amber-300 via-amber-400 to-[#FFA800] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(255,168,0,0.45)]">
+          <span className="bg-gradient-to-b from-amber-300 via-amber-400 to-[var(--gold)] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(245,168,0,0.45)]">
             ficates
           </span>
         </h2>

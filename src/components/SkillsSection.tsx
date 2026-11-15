@@ -29,7 +29,7 @@ const TOOL_GROUPS: ToolGroup[] = [
       'CSS3',
       'Tailwind CSS',
     ],
-    accentColor: '#FFA800',
+    accentColor: '#F5A800',
   },
   {
     id: 'backend',
@@ -43,7 +43,7 @@ const TOOL_GROUPS: ToolGroup[] = [
       'MongoDB',
       'Session-based authentication (email and password)',
     ],
-    accentColor: '#FFA800',
+    accentColor: '#F5A800',
   },
   {
     id: 'tools',
@@ -51,7 +51,7 @@ const TOOL_GROUPS: ToolGroup[] = [
     description: 'Engineering workflows, developer environments, and version control tooling.',
     icon: Wrench,
     items: ['Git', 'GitHub', 'VS Code'],
-    accentColor: '#FFA800',
+    accentColor: '#F5A800',
   },
 ];
 
@@ -247,10 +247,10 @@ const SkillCard: React.FC<{
             </div>
           </div>
 
-          <h3 data-depth="1" className="text-xl font-bold text-white">
+          <h3 data-depth="1" className="text-xl font-medium text-[var(--text)] tracking-[-0.02em]">
             {group.title}
           </h3>
-          <p className="mt-2 text-xs text-slate-300 font-normal leading-relaxed">
+          <p className="mt-2 text-sm text-[rgba(245,245,245,0.7)] font-normal leading-relaxed">
             {group.description}
           </p>
         </div>
@@ -323,10 +323,10 @@ export const SkillsSection: React.FC = () => {
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="mb-12"
       >
-        <div className="text-xs font-mono text-[#FFA800] uppercase tracking-widest mb-2">
+        <div className="text-[0.75rem] uppercase font-medium tracking-[0.12em] text-[var(--gold)] mb-2">
           TECHNICAL STACK
         </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-[var(--text)] tracking-[-0.03em] leading-[1.1]">
           Engineering Toolset
         </h2>
       </motion.div>

@@ -45,7 +45,7 @@ export const TECH_MAP: Record<string, TechMeta> = {
 export const TechTile: React.FC<{ name: string; className?: string }> = ({ name, className = '' }) => {
   const meta = TECH_MAP[name];
   const Icon = meta ? meta.icon : Code2;
-  const color = meta ? meta.color : '#FFA800';
+  const color = meta ? meta.color : '#F5A800';
 
   return (
     <div
@@ -55,7 +55,7 @@ export const TechTile: React.FC<{ name: string; className?: string }> = ({ name,
         className="w-3.5 h-3.5 shrink-0 transition-all duration-200 opacity-65 group-hover/tile:opacity-100 group-hover/tile:scale-110"
         style={{ color }}
       />
-      <span className="text-xs font-mono text-slate-300 group-hover/tile:text-white transition-colors duration-200 leading-normal break-words">
+      <span className="text-xs font-medium text-[rgba(245,245,245,0.8)] group-hover/tile:text-white transition-colors duration-200 leading-normal break-words">
         {name}
       </span>
     </div>

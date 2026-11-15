@@ -84,20 +84,20 @@ export const GoldOrbits: React.FC<GoldOrbitsProps> = ({ containerRef }) => {
           <defs>
             {/* Primary Orbit Metallic Gold Gradient */}
             <linearGradient id="orbit-gold-grad-1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#FFA800" stopOpacity="0.15" />
+              <stop offset="0%" stopColor="#F5A800" stopOpacity="0.15" />
               <stop offset="25%" stopColor="#FFE27D" stopOpacity="0.85" />
-              <stop offset="55%" stopColor="#FFA800" stopOpacity="0.95" />
+              <stop offset="55%" stopColor="#F5A800" stopOpacity="0.95" />
               <stop offset="80%" stopColor="#D97706" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#FFA800" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#F5A800" stopOpacity="0.15" />
             </linearGradient>
 
             {/* Secondary Orbit Metallic Gold Gradient */}
             <linearGradient id="orbit-gold-grad-2" x1="1" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#FFA800" stopOpacity="0.15" />
+              <stop offset="0%" stopColor="#F5A800" stopOpacity="0.15" />
               <stop offset="30%" stopColor="#FFE58F" stopOpacity="0.75" />
               <stop offset="60%" stopColor="#F59E0B" stopOpacity="0.85" />
               <stop offset="85%" stopColor="#B45309" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#FFA800" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#F5A800" stopOpacity="0.15" />
             </linearGradient>
 
             {/* Soft Glow Filter for Orbit Halo */}
@@ -111,14 +111,14 @@ export const GoldOrbits: React.FC<GoldOrbitsProps> = ({ containerRef }) => {
 
             {/* Token Gold Drop Shadow */}
             <filter id="orbit-token-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#FFA800" floodOpacity="0.85" />
+              <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#F5A800" floodOpacity="0.85" />
             </filter>
 
             {/* Minted Gold Coin Radial Gradient */}
             <radialGradient id="orbit-coin-grad" cx="35%" cy="35%" r="65%">
               <stop offset="0%" stopColor="#FFFFFF" />
               <stop offset="30%" stopColor="#FFF2B2" />
-              <stop offset="65%" stopColor="#FFA800" />
+              <stop offset="65%" stopColor="#F5A800" />
               <stop offset="90%" stopColor="#B45309" />
               <stop offset="100%" stopColor="#78350f" />
             </radialGradient>
@@ -139,7 +139,7 @@ export const GoldOrbits: React.FC<GoldOrbitsProps> = ({ containerRef }) => {
             {/* Soft Ambient Halo Line */}
             <path
               d={path1}
-              stroke="#FFA800"
+              stroke="#F5A800"
               strokeWidth="4"
               strokeOpacity="0.18"
               filter="url(#orbit-soft-glow)"
@@ -195,7 +195,7 @@ export const GoldOrbits: React.FC<GoldOrbitsProps> = ({ containerRef }) => {
               {/* Soft Ambient Halo Line */}
               <path
                 d={path2}
-                stroke="#FFA800"
+                stroke="#F5A800"
                 strokeWidth="3.5"
                 strokeOpacity="0.16"
                 filter="url(#orbit-soft-glow)"
