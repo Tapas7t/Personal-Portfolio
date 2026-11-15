@@ -67,7 +67,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
       id={isClone ? undefined : 'hero'}
       ref={isClone ? undefined : heroRef}
       onMouseMove={isClone ? undefined : handleHeroMouseMove}
-      className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-between pt-32 pb-12 px-6 md:px-12 max-w-7xl mx-auto overflow-hidden"
+      className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-between pt-28 sm:pt-32 pb-10 sm:pb-12 px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 w-full max-w-[1720px] mx-auto overflow-hidden"
     >
       {/* Layer 1: Dark Matte Tiled Block Terrain (faint gold rim light, ambient drift & parallax) */}
       {!isClone && <HeroTerrain heroRef={heroRef} />}
@@ -82,7 +82,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute right-0 top-1/2 -translate-y-1/2 w-[280px] sm:w-[380px] md:w-[480px] lg:w-[540px] aspect-[4/5] pointer-events-none z-[1] select-none overflow-hidden [mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] will-change-transform"
+        className="absolute right-0 top-1/2 -translate-y-1/2 w-[280px] sm:w-[380px] md:w-[480px] lg:w-[560px] xl:w-[640px] 2xl:w-[720px] aspect-[4/5] pointer-events-none z-[1] select-none overflow-hidden [mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] will-change-transform"
       >
         <motion.img
           src="/assets/portrait.png"

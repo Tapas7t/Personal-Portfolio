@@ -110,7 +110,7 @@ export const CertificatesSection: React.FC = () => {
     <section
       id="certificates"
       ref={sectionRef}
-      className="py-[var(--section-spacing-y)] px-6 md:px-12 max-w-7xl mx-auto border-t border-slate-900/80 scroll-mt-24 relative overflow-hidden"
+      className="py-[var(--section-spacing-y)] px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 w-full max-w-[1720px] mx-auto border-t border-slate-900/80 scroll-mt-24 relative overflow-hidden"
     >
       {/* 3D Perspective Gold Orbits & Tokens (behind cards) */}
       <GoldOrbits containerRef={sectionRef} />
