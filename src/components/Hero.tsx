@@ -1,5 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
+import { HeroTerrain } from './HeroTerrain';
+import { HeroFloatingElements } from './HeroFloatingElements';
 
 interface HeroProps {
   onOpenContact?: () => void;
@@ -8,6 +10,24 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
   const heroRef = useRef<HTMLElement>(null);
+  const [isReducedMotionOrMobile, setIsReducedMotionOrMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const checkState = () => {
+      const isMobile = window.innerWidth < 768;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setIsReducedMotionOrMobile(isMobile || reduced);
+    };
+    checkState();
+    window.addEventListener('resize', checkState);
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    mq.addEventListener('change', checkState);
+    return () => {
+      window.removeEventListener('resize', checkState);
+      mq.removeEventListener('change', checkState);
+    };
+  }, []);
 
   // Scroll parallax for monumental typography and portrait
   const { scrollYProgress } = useScroll({
@@ -20,15 +40,18 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
   const portraitScrollY = useTransform(scrollYProgress, [0, 1], [0, 45]);
   const portraitScrollOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.5, 0]);
 
-  // Subtle pointer parallax on portrait (desktop only, damped physics)
+  // Subtle pointer parallax on portrait (desktop only, damped physics, moves only ~4px)
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
   const smoothMouseX = useSpring(mouseX, { stiffness: 70, damping: 20 });
   const smoothMouseY = useSpring(mouseY, { stiffness: 70, damping: 20 });
 
-  const portraitParallaxX = useTransform(smoothMouseX, [0, 1], [-8, 8]);
-  const portraitParallaxY = useTransform(smoothMouseY, [0, 1], [-6, 6]);
+  const portraitParallaxX = useTransform(smoothMouseX, [0, 1], [-4, 4]);
+
+  // Light perspective tilt for hero title
+  const titleRotateX = useTransform(smoothMouseY, [0, 1], [3, -3]);
+  const titleRotateY = useTransform(smoothMouseX, [0, 1], [-4, 4]);
 
   const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!heroRef.current || isClone) return;
@@ -46,30 +69,20 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
       onMouseMove={isClone ? undefined : handleHeroMouseMove}
       className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-between pt-32 pb-12 px-6 md:px-12 max-w-7xl mx-auto overflow-hidden"
     >
-      {/* Top Editorial Status with gentle initial fade-in */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-wrap items-center text-xs font-mono uppercase tracking-widest text-slate-400 pt-2 z-10 break-words"
-      >
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-          <span>STATUS · AVAILABLE FOR ROLES · MUMBAI, INDIA</span>
-        </div>
-      </motion.div>
+      {/* Layer 1: Dark Matte Tiled Block Terrain (faint gold rim light, ambient drift & parallax) */}
+      {!isClone && <HeroTerrain heroRef={heroRef} />}
 
-      {/* Atmospheric Portrait Anchor with Subtle Scale Drift & Mouse Parallax */}
+      {/* Layer 2: Atmospheric Portrait Anchor with Subtle Scale Drift & Mouse Parallax (moves only ~4px) */}
       <motion.div
         style={{
           y: portraitScrollY,
           opacity: portraitScrollOpacity,
-          x: portraitParallaxX,
+          x: isReducedMotionOrMobile ? 0 : portraitParallaxX,
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.9, ease: 'easeOut' }}
-        className="absolute right-0 top-1/2 -translate-y-1/2 w-[280px] sm:w-[380px] md:w-[480px] lg:w-[540px] aspect-[4/5] pointer-events-none z-0 select-none overflow-hidden [mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] will-change-transform"
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute right-0 top-1/2 -translate-y-1/2 w-[280px] sm:w-[380px] md:w-[480px] lg:w-[540px] aspect-[4/5] pointer-events-none z-[1] select-none overflow-hidden [mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_at_60%_45%,black_35%,transparent_75%)] will-change-transform"
       >
         <motion.img
           src="/assets/portrait.png"
@@ -86,7 +99,27 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         />
       </motion.div>
 
-      {/* Main Typography & Statement with Clean, Staggered Entrance */}
+      {/* Layer 3: Dark gradient overlay ensuring optimal contrast for hero text & buttons */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#06070a]/90 via-[#06070a]/50 to-transparent pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#06070a] via-transparent to-[#06070a]/40 pointer-events-none z-[2]" />
+
+      {/* Layer 3B: Floating Gold Objects & Fine Gold Dust */}
+      {!isClone && <HeroFloatingElements heroRef={heroRef} />}
+
+      {/* Layer 4: Top Editorial Status with gentle initial fade-in */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-wrap items-center text-xs font-mono uppercase tracking-widest text-slate-400 pt-2 z-10 break-words"
+      >
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+          <span>STATUS · AVAILABLE FOR ROLES · MUMBAI, INDIA</span>
+        </div>
+      </motion.div>
+
+      {/* Layer 4: Main Typography & Statement with Clean, Staggered Entrance & 3D Title Tilt */}
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
         className="my-auto py-8 md:py-16 select-none relative z-10 max-w-5xl"
@@ -104,8 +137,16 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
               <span>FULL-STACK DEVELOPER · AI ENTHUSIAST</span>
             </motion.div>
 
-            {/* Clean Staggered Headings Hierarchy */}
-            <div className="space-y-1 sm:space-y-2">
+            {/* Clean Staggered Headings Hierarchy with 3D Perspective Tilt */}
+            <motion.div
+              style={{
+                rotateX: isReducedMotionOrMobile ? 0 : titleRotateX,
+                rotateY: isReducedMotionOrMobile ? 0 : titleRotateY,
+                transformPerspective: 800,
+                transformStyle: 'preserve-3d',
+              }}
+              className="space-y-1 sm:space-y-2 will-change-transform"
+            >
               <motion.h1
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -124,7 +165,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
                 <span>& </span>
                 <span className="text-[#FFA800]">AI Enthusiast</span>
               </motion.div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Sequential entrance of description */}
@@ -149,7 +190,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.2 }}
-              className="min-h-[44px] px-7 py-3 rounded-lg bg-white text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors shadow-sm flex items-center justify-center"
+              className="min-h-[44px] px-7 py-3 rounded-lg bg-white text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors shadow-sm flex items-center justify-center cursor-pointer"
             >
               Explore My Work
             </motion.a>
@@ -157,11 +198,11 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         </div>
       </motion.div>
 
-      {/* Hero Footnotes / Technologies */}
+      {/* Layer 4: Hero Footnotes / Technologies */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.58, ease: 'easeOut' }}
+        transition={{ duration: 0.6, delay: 0.58, ease: [0.16, 1, 0.3, 1] }}
         className="pt-8 border-t border-slate-800/80 text-xs font-mono text-slate-400 z-10"
       >
         <div className="space-y-1">
@@ -174,7 +215,7 @@ export const Hero: React.FC<HeroProps> = ({ isClone = false }) => {
         </div>
       </motion.div>
 
-      {/* Editorial Scroll Prompt Indicator */}
+      {/* Layer 4: Editorial Scroll Prompt Indicator */}
       <motion.a
         href="#works"
         aria-label="Scroll to Works"

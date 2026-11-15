@@ -5,11 +5,18 @@
   :root {
     --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --font-serif: 'Instrument Serif', Georgia, serif;
     --section-spacing-y: clamp(3.5rem, 5vw, 4.75rem);
   }
 
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.lenis) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  html.lenis {
+    scroll-behavior: auto !important;
   }
 
   body {
@@ -19,7 +26,10 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-sans);
     letter-spacing: -0.03em;
   }
@@ -27,6 +37,175 @@
 
 .font-mono-code {
   font-family: var(--font-mono);
+}
+
+.font-serif-accent {
+  font-family: var(--font-serif);
+}
+
+/* Unified Glass Card System */
+.glass-card {
+  position: relative;
+  isolation: isolate;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)),
+    rgba(10, 11, 16, .72);
+  border: 1px solid rgba(255,190,60,.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 0 26px -10px rgba(255,190,60,.22),
+    0 20px 40px -24px rgba(0,0,0,.8);
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1),
+              box-shadow .3s ease, border-color .3s ease;
+}
+.glass-card > * { position: relative; z-index: 1; }
+
+/* Depth: any child with data-depth="1" gets transform: translateZ(18px) */
+.glass-card [data-depth="1"] {
+  transform: translateZ(18px);
+  transform-style: preserve-3d;
+}
+
+/* bright gold border that follows the pointer (hidden at rest) */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity .3s ease;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
+              rgba(255,196,70,.95), rgba(255,196,70,.15) 45%, transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* soft inner spotlight (hidden at rest) */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity .3s ease;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+              rgba(255,190,60,.10), transparent 65%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glass-card:hover {
+    border-color: rgba(255,190,60,.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.18),
+      0 0 38px -8px rgba(255,190,60,.38),
+      0 24px 48px -24px rgba(0,0,0,.9);
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.015);
+    transition: transform .12s ease-out, box-shadow .3s ease, border-color .3s ease;
+  }
+  .glass-card:hover::before,
+  .glass-card:hover::after { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .glass-card {
+    transform: none !important;
+    transition: none !important;
+  }
+  .glass-card:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+  .glass-card [data-depth="1"] {
+    transform: none !important;
+  }
+}
+
+/* 1. THIN BEAM around the full border (constant speed) */
+@keyframes nav-beam-cycle {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+
+.nav-border-rect {
+  x: 1px;
+  y: 1px;
+  fill: none;
+}
+
+.nav-beam-track {
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1px;
+}
+
+.nav-beam-glow {
+  stroke: #ffb938;
+  stroke-width: 1.5px;
+  filter: blur(2px);
+  opacity: 0.55;
+  stroke-dasharray: 7 93;
+  stroke-linecap: round;
+  animation: nav-beam-cycle 7s linear infinite;
+  will-change: stroke-dashoffset;
+  -webkit-mask: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 24px, #000 56px, #000 calc(100% - 56px), rgba(0,0,0,0.5) calc(100% - 24px), rgba(0,0,0,0.35) 100%);
+  mask: linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 24px, #000 56px, #000 calc(100% - 56px), rgba(0,0,0,0.5) calc(100% - 24px), rgba(0,0,0,0.35) 100%);
+}
+
+.nav-beam-core {
+  stroke: #ffe3a0;
+  stroke-width: 1px;
+  stroke-dasharray: 7 93;
+  stroke-linecap: round;
+  animation: nav-beam-cycle 7s linear infinite;
+  will-change: stroke-dashoffset;
+}
+
+.nav-beam-reduced {
+  stroke: rgba(255, 185, 56, 0.45);
+  stroke-width: 1px;
+}
+
+/* 2. 3D PILL */
+.nav-pill {
+  position: relative;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(48,40,26,.55), rgba(10,10,14,.78));
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -1px 0 rgba(0,0,0,.6),
+    inset 0 -14px 24px rgba(0,0,0,.35),
+    0 18px 40px -12px rgba(0,0,0,.85);
+  transform: perspective(900px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+  transform-style: preserve-3d;
+  transition: padding .3s ease, transform .25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-beam-glow,
+  .nav-beam-core {
+    animation: none !important;
+    display: none !important;
+  }
+  .nav-pill {
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* Subtle atmospheric grain overlay */
@@ -39,7 +218,9 @@
     scroll-behavior: auto !important;
   }
 
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
-import { calculateMagneticOffset } from '../utils/portfolio-logic';
+import { motion, useSpring, useMotionValue } from 'motion/react';
+import { ArrowRight, Menu, X } from 'lucide-react';
+import { scrollToTarget, stopScroll, startScroll } from '../utils/smoothScroll';
 
 interface NavbarProps {
   onOpenContact: () => void;
@@ -11,44 +11,27 @@ interface NavLinkProps {
   href: string;
   label: string;
   isActive: boolean;
-  onClick?: () => void;
+  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 const NavLink: React.FC<NavLinkProps> = ({ href, label, isActive, onClick }) => {
-  const linkRef = useRef<HTMLAnchorElement>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!linkRef.current) return;
-    const rect = linkRef.current.getBoundingClientRect();
-    const mag = calculateMagneticOffset(e.clientX, e.clientY, rect, 0.3, 8);
-    setOffset(mag);
-  };
-
-  const handleMouseLeave = () => {
-    setOffset({ x: 0, y: 0 });
-  };
-
   return (
-    <motion.a
-      ref={linkRef}
+    <a
       href={href}
       onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x: offset.x, y: offset.y }}
-      transition={{ type: 'spring', stiffness: 280, damping: 18, mass: 0.1 }}
-      className={`relative px-2.5 lg:px-3 py-2 min-h-[44px] flex items-center text-xs uppercase tracking-wider transition-colors whitespace-nowrap shrink-0 group ${
-        isActive ? 'text-white font-semibold' : 'text-slate-400 hover:text-white font-medium'
+      className={`relative px-3 py-2 min-h-[44px] flex items-center text-[11px] lg:text-xs font-sans uppercase tracking-wider transition-colors duration-200 whitespace-nowrap shrink-0 group select-none ${
+        isActive ? 'text-white font-bold' : 'text-slate-300 hover:text-white font-medium'
       }`}
     >
-      <span className="relative z-10">{label}</span>
-      <span
-        className={`absolute bottom-1.5 left-2 right-2 h-[2px] bg-[#FFA800] transition-transform origin-center duration-250 ease-out ${
-          isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-        }`}
-      />
-    </motion.a>
+      <span className="relative z-10 transition-colors duration-200">{label}</span>
+      {isActive && (
+        <motion.div
+          layoutId="active-navbar-indicator"
+          className="absolute bottom-1 left-2.5 right-2.5 h-[2px] bg-gradient-to-r from-amber-400 via-[#FFA800] to-amber-300 rounded-full shadow-[0_0_10px_rgba(255,168,0,0.85)]"
+          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+        />
+      )}
+    </a>
   );
 };
 
@@ -56,7 +39,123 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [pillDimensions, setPillDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
+  // Pill container ref for --nav-h tracking and 3D pointer tilt
+  const pillRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Detect touch and reduced-motion capabilities
+    const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0 || touchQuery.matches);
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(motionQuery.matches);
+
+    const motionListener = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    motionQuery.addEventListener('change', motionListener);
+
+    return () => motionQuery.removeEventListener('change', motionListener);
+  }, []);
+
+  // Lock scroll when mobile menu is open, unlock when closed
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      stopScroll();
+      document.body.style.overflow = 'hidden';
+    } else {
+      startScroll();
+      document.body.style.overflow = '';
+    }
+    return () => {
+      startScroll();
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Close mobile drawer on desktop resize to prevent stuck overflow lock
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mobileMenuOpen]);
+
+  // Measure pill dimensions and update rect geometry via ResizeObserver
+  useEffect(() => {
+    const el = pillRef.current;
+    if (!el) return;
+
+    const measurePill = () => {
+      if (pillRef.current) {
+        const rect = pillRef.current.getBoundingClientRect();
+        const w = Math.round(rect.width);
+        const h = Math.round(rect.height);
+        setPillDimensions({ width: w, height: h });
+        pillRef.current.style.setProperty('--nav-h', `${h}px`);
+      }
+    };
+
+    measurePill();
+
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const rect = entry.target.getBoundingClientRect();
+        const w = Math.round(rect.width);
+        const h = Math.round(rect.height);
+        setPillDimensions({ width: w, height: h });
+        if (pillRef.current) {
+          pillRef.current.style.setProperty('--nav-h', `${h}px`);
+        }
+      }
+    });
+
+    ro.observe(el);
+    window.addEventListener('resize', measurePill);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measurePill);
+    };
+  }, []);
+
+  // Continuously track rect dimensions during the scroll shrink/expand transition
+  useEffect(() => {
+    const el = pillRef.current;
+    if (!el) return;
+
+    let animId: number;
+    const startTime = performance.now();
+    const duration = 350;
+
+    const updateFrame = (now: number) => {
+      if (pillRef.current) {
+        const rect = pillRef.current.getBoundingClientRect();
+        const w = Math.round(rect.width);
+        const h = Math.round(rect.height);
+        setPillDimensions({ width: w, height: h });
+        pillRef.current.style.setProperty('--nav-h', `${h}px`);
+      }
+      if (now - startTime < duration) {
+        animId = requestAnimationFrame(updateFrame);
+      }
+    };
+
+    animId = requestAnimationFrame(updateFrame);
+
+    return () => {
+      cancelAnimationFrame(animId);
+    };
+  }, [scrolled]);
+
+  // Viewport-relative Single Scroll-Spy (30-40% viewport line)
   useEffect(() => {
     let ticking = false;
 
@@ -64,32 +163,80 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
-          setScrolled(scrollY > 40);
+          setScrolled(scrollY > 25);
 
-          const sections = ['works', 'skills', 'certificates', 'experience', 'connect', 'resume'];
-          const scrollPos = scrollY + 220;
+          const sectionIds = ['works', 'skills', 'certificates', 'experience', 'resume'];
+
+          // At top of the page (Hero area): no section link is active, clear hash
+          if (scrollY < 120) {
+            setActiveSection((prev) => {
+              if (prev !== '') {
+                if (window.location.hash) {
+                  window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+                return '';
+              }
+              return prev;
+            });
+            ticking = false;
+            return;
+          }
+
+          // Active line is roughly 35% from the top of viewport (below floating navbar)
+          const viewportThreshold = window.innerHeight * 0.35;
           let current = '';
 
-          for (let i = sections.length - 1; i >= 0; i--) {
-            const el = document.getElementById(sections[i]);
-            if (el && el.offsetTop <= scrollPos) {
-              current = sections[i];
-              break;
+          // Check if at the very bottom of page
+          const isAtBottom =
+            window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60;
+
+          if (isAtBottom) {
+            current = 'resume';
+          } else {
+            // Find section that encompasses the 35% threshold line
+            for (const id of sectionIds) {
+              const el = document.getElementById(id);
+              if (el) {
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= viewportThreshold && rect.bottom > viewportThreshold) {
+                  current = id;
+                  break;
+                }
+              }
+            }
+
+            // Fallback: closest section whose top is nearest below/at navbar
+            if (!current) {
+              let minDistance = Infinity;
+              for (const id of sectionIds) {
+                const el = document.getElementById(id);
+                if (el) {
+                  const rect = el.getBoundingClientRect();
+                  const distance = Math.abs(rect.top - viewportThreshold);
+                  if (rect.top <= viewportThreshold && distance < minDistance) {
+                    minDistance = distance;
+                    current = id;
+                  }
+                }
+              }
             }
           }
 
-          setActiveSection(current);
-
-          // Dynamically sync URL hash without reloading or polluting history
-          if (current) {
-            if (window.location.hash !== `#${current}`) {
-              window.history.replaceState(null, '', `#${current}`);
+          setActiveSection((prev) => {
+            if (current !== prev) {
+              if (current) {
+                if (window.location.hash !== `#${current}`) {
+                  window.history.replaceState(null, '', `#${current}`);
+                }
+              } else {
+                if (window.location.hash) {
+                  window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+              }
+              return current;
             }
-          } else if (scrollY < 200) {
-            if (window.location.hash) {
-              window.history.replaceState(null, '', window.location.pathname + window.location.search);
-            }
-          }
+            return prev;
+          });
 
           ticking = false;
         });
@@ -110,104 +257,277 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenContact }) => {
     { label: 'Resume', href: '#resume', id: 'resume' },
   ];
 
+  // Smooth scroll with offset for floating navbar height
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    scrollToTarget('#' + targetId, { offset: -85, duration: 0.9 });
+    setActiveSection(targetId);
+    if (window.location.hash !== `#${targetId}`) {
+      window.history.replaceState(null, '', `#${targetId}`);
+    }
+  };
+
+  const rectW = pillDimensions.width > 2 ? pillDimensions.width - 2 : 'calc(100% - 2px)';
+  const rectH = pillDimensions.height > 2 ? pillDimensions.height - 2 : 'calc(100% - 2px)';
+  const rectRx = pillDimensions.height > 2 ? (pillDimensions.height - 2) / 2 : undefined;
+
   return (
     <header
       id="navbar"
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#07080b]/90 backdrop-blur-md border-b border-slate-800/80 py-4 shadow-xl'
-          : 'bg-transparent py-6'
-      }`}
+      className="fixed top-3 sm:top-5 inset-x-0 mx-auto z-50 w-[calc(100%-1.25rem)] sm:w-[calc(100%-2.5rem)] max-w-5xl [perspective:1200px]"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between gap-4 lg:gap-8">
-        {/* Brand Wordmark */}
-        <a
-          href="#hero"
-          className="text-lg md:text-xl font-black tracking-widest text-slate-100 hover:text-white transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 min-h-[44px] group"
-          aria-label="Tapas Home"
+      {/* 3D Motion Wrapper with Page-Load Drop-in Spring */}
+      <motion.div
+        initial={prefersReducedMotion ? { opacity: 0 } : { y: -65, opacity: 0 }}
+        animate={
+          prefersReducedMotion
+            ? { opacity: 1 }
+            : {
+                y: 0,
+                opacity: 1,
+                scale: scrolled ? 0.985 : 1,
+              }
+        }
+        transition={{
+          y: { type: 'spring', stiffness: 120, damping: 18, mass: 0.8 },
+          scale: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
+          opacity: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+        }}
+        className="w-full relative [transform-style:preserve-3d]"
+      >
+        {/* Real 3D Glass Pill Container */}
+        <div
+          ref={pillRef}
+          onPointerMove={(e) => {
+            if (isTouchDevice || prefersReducedMotion) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width - 0.5;
+            const py = (e.clientY - rect.top) / rect.height - 0.5;
+            const tx = -py * 4; // at most 2deg
+            const ty = px * 4;  // at most 2deg
+            e.currentTarget.style.setProperty('--tx', `${tx.toFixed(2)}deg`);
+            e.currentTarget.style.setProperty('--ty', `${ty.toFixed(2)}deg`);
+          }}
+          onPointerLeave={(e) => {
+            e.currentTarget.style.setProperty('--tx', '0deg');
+            e.currentTarget.style.setProperty('--ty', '0deg');
+          }}
+          className={`nav-pill px-4 sm:px-6 md:px-8 ${
+            scrolled ? 'py-1.5 sm:py-2' : 'py-2 sm:py-2.5'
+          } flex items-center justify-between gap-3 transition-all duration-300`}
         >
-          <span>TAPAS</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FFA800] group-hover:scale-125 transition-transform duration-200" />
-        </a>
-
-        {/* Desktop Navigation Links */}
-        <nav
-          className="hidden md:flex items-center gap-2 lg:gap-5"
-          aria-label="Main Navigation"
-        >
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.label}
-              href={link.href}
-              label={link.label}
-              isActive={activeSection === link.id}
-            />
-          ))}
-        </nav>
-
-        {/* Primary CTA */}
-        <div className="hidden md:flex items-center gap-3 shrink-0">
-          <motion.button
-            onClick={onOpenContact}
-            whileHover={{ scale: 1.02, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.2 }}
-            className="group flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] text-xs font-semibold uppercase tracking-wider text-slate-950 bg-amber-400 rounded-md hover:bg-amber-300 transition-colors shadow-sm whitespace-nowrap shrink-0"
+          {/* 1. THIN BEAM around the full border (constant speed) */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-20"
+            fill="none"
           >
-            <span>Get In Touch</span>
-            <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 duration-200" />
-          </motion.button>
-        </div>
+            <defs>
+              <linearGradient id="nav-beam-glow-mask-grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#fff" stopOpacity="0.35" />
+                <stop offset="5%" stopColor="#fff" stopOpacity="0.5" />
+                <stop offset="12%" stopColor="#fff" stopOpacity="1" />
+                <stop offset="88%" stopColor="#fff" stopOpacity="1" />
+                <stop offset="95%" stopColor="#fff" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#fff" stopOpacity="0.35" />
+              </linearGradient>
+              <mask id="nav-beam-glow-mask" maskContentUnits="objectBoundingBox">
+                <rect x="0" y="0" width="1" height="1" fill="url(#nav-beam-glow-mask-grad)" />
+              </mask>
+            </defs>
+            {prefersReducedMotion ? (
+              <rect
+                x="1"
+                y="1"
+                width={rectW}
+                height={rectH}
+                rx={rectRx}
+                pathLength="100"
+                className="nav-border-rect nav-beam-reduced"
+              />
+            ) : (
+              <>
+                {/* a) track: stroke rgba(255,255,255,.06), 1px */}
+                <rect
+                  x="1"
+                  y="1"
+                  width={rectW}
+                  height={rectH}
+                  rx={rectRx}
+                  pathLength="100"
+                  className="nav-border-rect nav-beam-track"
+                />
+                {/* b) glow: stroke #ffb938, 1.5px, filter blur(2px), opacity .55, stroke-dasharray "7 93", stroke-linecap round */}
+                <rect
+                  x="1"
+                  y="1"
+                  width={rectW}
+                  height={rectH}
+                  rx={rectRx}
+                  pathLength="100"
+                  mask="url(#nav-beam-glow-mask)"
+                  className="nav-border-rect nav-beam-glow"
+                />
+                {/* c) core: stroke #ffe3a0, 1px, stroke-dasharray "7 93", stroke-linecap round */}
+                <rect
+                  x="1"
+                  y="1"
+                  width={rectW}
+                  height={rectH}
+                  rx={rectRx}
+                  pathLength="100"
+                  className="nav-border-rect nav-beam-core"
+                />
+              </>
+            )}
+          </svg>
 
-        {/* Mobile Hamburger Toggle */}
-        <div className="md:hidden flex items-center gap-2">
-          <motion.button
-            whileTap={{ scale: 0.92 }}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="min-h-[44px] min-w-[44px] p-2.5 flex items-center justify-center text-slate-300 hover:text-white rounded-md border border-slate-800 bg-slate-900/60 transition-colors"
-            aria-label="Toggle mobile navigation menu"
+          {/* 3D Embossed Metallic Gold Wordmark: TAPAS (lifted with translateZ(12px)) */}
+          <a
+            href="#hero"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToTarget(0, { offset: 0, duration: 0.9 });
+              setActiveSection('');
+              window.history.replaceState(null, '', window.location.pathname + window.location.search);
+            }}
+            style={{ transform: 'translateZ(12px)' }}
+            className="flex items-center text-xl sm:text-2xl md:text-[26px] font-black tracking-wider transition-transform hover:scale-105 duration-200 whitespace-nowrap shrink-0 min-h-[44px] select-none group relative z-10 will-change-transform"
+            aria-label="Tapas Home"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </motion.button>
-        </div>
-      </div>
+            {/* T */}
+            <span
+              style={{
+                filter:
+                  'drop-shadow(0 1px 0 #92400e) drop-shadow(0 2px 0 #78350f) drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 14px rgba(255,168,0,0.35))',
+              }}
+              className="bg-gradient-to-b from-[#FFF7D6] via-[#F6C358] to-[#B87A14] bg-clip-text text-transparent font-black"
+            >
+              T
+            </span>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="md:hidden bg-[#0a0c10] border-b border-slate-800 px-6 py-6 space-y-4"
-        >
-          <div className="flex flex-col space-y-2">
+            {/* A (Distinctly brighter, radiant golden accent) */}
+            <span
+              style={{
+                filter:
+                  'drop-shadow(0 1px 0 #b45309) drop-shadow(0 2px 0 #92400e) drop-shadow(0 4px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(255,200,60,0.7))',
+              }}
+              className="bg-gradient-to-b from-[#FFFFFF] via-[#FFE27D] to-[#FFA800] bg-clip-text text-transparent font-black px-0.5"
+            >
+              A
+            </span>
+
+            {/* PAS */}
+            <span
+              style={{
+                filter:
+                  'drop-shadow(0 1px 0 #92400e) drop-shadow(0 2px 0 #78350f) drop-shadow(0 4px 6px rgba(0,0,0,0.8)) drop-shadow(0 0 14px rgba(255,168,0,0.35))',
+              }}
+              className="bg-gradient-to-b from-[#FFF7D6] via-[#F6C358] to-[#B87A14] bg-clip-text text-transparent font-black"
+            >
+              PAS
+            </span>
+          </a>
+
+          {/* Desktop Navigation Links with Smooth Sliding Gold Indicator */}
+          <nav
+            className="hidden md:flex items-center gap-1 lg:gap-2 relative z-10"
+            aria-label="Main Navigation"
+          >
             {navLinks.map((link) => (
-              <a
+              <NavLink
                 key={link.label}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`min-h-[44px] px-3 py-2.5 text-sm uppercase tracking-wider font-medium flex items-center rounded-lg transition-colors ${
-                  activeSection === link.id ? 'text-amber-400 font-bold bg-slate-900/60' : 'text-slate-300 hover:text-amber-400 hover:bg-slate-900/30'
-                }`}
-              >
-                {link.label}
-              </a>
+                label={link.label}
+                isActive={activeSection === link.id}
+                onClick={(e) => scrollToSection(e, link.id)}
+              />
             ))}
-          </div>
-          <div className="pt-4 border-t border-slate-800">
+          </nav>
+
+          {/* Primary CTA: Outlined Gold Pill with Soft Glow & Arrow Shift (lifted with translateZ(12px)) */}
+          <div
+            style={{ transform: 'translateZ(12px)' }}
+            className="hidden md:flex items-center gap-3 shrink-0 relative z-10 will-change-transform"
+          >
             <motion.button
+              onClick={onOpenContact}
+              whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenContact();
-              }}
-              className="w-full min-h-[44px] py-3 px-4 text-xs font-semibold uppercase tracking-wider text-slate-950 bg-amber-400 rounded-md hover:bg-amber-300 transition-colors text-center flex items-center justify-center"
+              transition={{ duration: 0.18 }}
+              className="group flex items-center gap-2 px-5 py-2 min-h-[44px] text-xs font-sans font-bold uppercase tracking-wider text-[#FFA800] hover:text-amber-200 bg-amber-400/[0.08] hover:bg-amber-400/[0.2] border border-amber-400/80 hover:border-amber-300 rounded-full transition-all duration-200 shadow-[0_0_15px_rgba(255,168,0,0.18)] hover:shadow-[0_0_28px_rgba(255,168,0,0.45)] whitespace-nowrap shrink-0 cursor-pointer"
             >
-              Get In Touch
+              <span>Get In Touch</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#FFA800] group-hover:text-amber-200 transition-transform duration-250 ease-out group-hover:translate-x-1.5" />
             </motion.button>
           </div>
-        </motion.div>
-      )}
+
+          {/* Mobile Hamburger Toggle Button */}
+          <div className="md:hidden flex items-center relative z-10">
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="min-h-[44px] min-w-[44px] p-2 flex items-center justify-center text-slate-300 hover:text-white rounded-full border border-white/10 bg-slate-900/60 transition-colors"
+              aria-label="Toggle mobile navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-amber-400" /> : <Menu className="w-5 h-5" />}
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Mobile Drawer: Smoked Glass Island */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              backgroundColor: 'rgba(10, 12, 18, 0.92)',
+              WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+              backdropFilter: 'blur(28px) saturate(180%)',
+              boxShadow: `
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.18),
+                0 25px 50px -12px rgba(0, 0, 0, 0.85)
+              `,
+            }}
+            className="md:hidden mt-2 rounded-2xl border border-white/[0.12] border-t-white/[0.24] px-5 py-5 space-y-4"
+          >
+            <div className="flex flex-col space-y-1">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => {
+                    scrollToSection(e, link.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`min-h-[44px] px-3.5 py-2.5 text-xs font-sans uppercase tracking-wider flex items-center rounded-xl transition-colors ${
+                    activeSection === link.id
+                      ? 'text-[#FFA800] font-bold bg-amber-400/10 border border-amber-400/20'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+
+            <div className="pt-3 border-t border-white/[0.08]">
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenContact();
+                }}
+                className="w-full min-h-[44px] py-2.5 px-4 text-xs font-sans font-bold uppercase tracking-wider text-[#FFA800] bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/80 rounded-full transition-colors text-center flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(255,168,0,0.18)]"
+              >
+                <span>Get In Touch</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
     </header>
   );
 };

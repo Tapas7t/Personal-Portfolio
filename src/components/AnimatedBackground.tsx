@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 
 export const AnimatedBackground: React.FC = () => {
-  // Pointer-responsive subtle ambient glow
+  // Pointer-responsive subtle ambient glow (fades in on pointer movement, fades out when pointer leaves)
   const pointerX = useMotionValue(typeof window !== 'undefined' ? window.innerWidth / 2 : 500);
   const pointerY = useMotionValue(typeof window !== 'undefined' ? window.innerHeight / 2 : 400);
+  const pointerOpacity = useMotionValue(0);
 
   const springPointerX = useSpring(pointerX, { stiffness: 50, damping: 25, mass: 0.5 });
   const springPointerY = useSpring(pointerY, { stiffness: 50, damping: 25, mass: 0.5 });
+  const springPointerOpacity = useSpring(pointerOpacity, { stiffness: 80, damping: 22 });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -15,11 +17,20 @@ export const AnimatedBackground: React.FC = () => {
     const handlePointerMove = (e: MouseEvent) => {
       pointerX.set(e.clientX);
       pointerY.set(e.clientY);
+      pointerOpacity.set(1);
+    };
+
+    const handleMouseLeave = () => {
+      pointerOpacity.set(0);
     };
 
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handlePointerMove);
-  }, [pointerX, pointerY]);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      window.removeEventListener('mousemove', handlePointerMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [pointerX, pointerY, pointerOpacity]);
 
   return (
     <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden bg-[#06070a] transform-gpu">
@@ -31,6 +42,7 @@ export const AnimatedBackground: React.FC = () => {
         style={{
           x: springPointerX,
           y: springPointerY,
+          opacity: springPointerOpacity,
           translateX: '-50%',
           translateY: '-50%',
         }}
@@ -48,7 +60,7 @@ export const AnimatedBackground: React.FC = () => {
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-[900px] h-[500px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,168,0,0.03)_0%,rgba(15,23,42,0.06)_50%,transparent_75%)] pointer-events-none"
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-[900px] h-[500px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(255,168,0,0.025)_0%,rgba(15,23,42,0.05)_50%,transparent_75%)] pointer-events-none"
       />
 
       {/* Cinematic Vignette */}

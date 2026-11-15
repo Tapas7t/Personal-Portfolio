@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -10,14 +10,18 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { ProjectModal } from './components/ProjectModal';
 import { ProjectItem } from './utils/portfolio-logic';
+import { initSmoothScroll, scrollToTarget } from './utils/smoothScroll';
 
 export default function App() {
   const [activeProjectModal, setActiveProjectModal] = useState<ProjectItem | null>(null);
 
+  useEffect(() => {
+    return initSmoothScroll();
+  }, []);
+
   const handleOpenContact = () => {
-    const contactElement = document.getElementById('connect');
-    if (contactElement) {
-      contactElement.scrollIntoView({ behavior: 'smooth' });
+    scrollToTarget('#connect', { offset: -85, duration: 0.9 });
+    if (window.location.hash !== '#connect') {
       window.history.replaceState(null, '', '#connect');
     }
   };
