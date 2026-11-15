@@ -45,3 +45,5 @@ yarn-error.log*
 .aistudio/
 scratch/
 metadata.json
+
+bun.lock
