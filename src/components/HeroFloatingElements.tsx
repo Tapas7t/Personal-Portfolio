@@ -228,46 +228,6 @@ export const HeroFloatingElements: React.FC<HeroFloatingElementsProps> = ({ hero
       )}
 
       {/* Floating 3D Gold Objects */}
-      {/* 1. Sparkle Star (Top-Left corner) */}
-      <motion.div
-        style={{
-          left: isMobile ? '4%' : '3%',
-          top: isMobile ? '6%' : '9%',
-          x: isStatic ? 0 : pxDeep,
-          y: isStatic ? 0 : pyDeep,
-        }}
-        className="absolute z-10 will-change-transform"
-      >
-        <motion.div
-          animate={
-            isStatic || !isInView
-              ? undefined
-              : {
-                  scale: [0.85, 1.25, 0.85],
-                  opacity: [0.65, 1, 0.65],
-                  rotate: [0, 45, 0],
-                }
-          }
-          transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-5 h-5 flex items-center justify-center"
-        >
-          <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-[0_0_12px_rgba(56,189,248,0.85)]">
-            <defs>
-              <radialGradient id="sparkle-grad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#FFFFFF" />
-                <stop offset="35%" stopColor="#E0F2FE" />
-                <stop offset="70%" stopColor="#38BDF8" />
-                <stop offset="100%" stopColor="#0284C7" />
-              </radialGradient>
-            </defs>
-            <path
-              d="M 12 0 Q 12 12 0 12 Q 12 12 12 24 Q 12 12 24 12 Q 12 12 12 0 Z"
-              fill="url(#sparkle-grad)"
-            />
-          </svg>
-        </motion.div>
-      </motion.div>
-
       {/* 2. Frosted Glass Cube 1 (Top-Right on mobile, Top-Center on desktop) */}
       <motion.div
         style={{
